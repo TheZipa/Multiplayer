@@ -1,0 +1,72 @@
+using Cysharp.Threading.Tasks;
+using MultiplayerGame.Code.Core.UI;
+using MultiplayerGame.Code.Infrastructure.StateMachine.GameStateMachine;
+using MultiplayerGame.Code.Services.EntityContainer;
+using MultiplayerGame.Code.Services.Factories.GameFactory;
+using MultiplayerGame.Code.Services.Factories.UIFactory;
+using MultiplayerGame.Code.Services.LoadingCurtain;
+using MultiplayerGame.Code.Services.Multiplayer;
+using MultiplayerGame.Code.Services.SceneLoader;
+using UnityEngine;
+
+namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
+{
+    public class LoadGameState : IState
+    {
+        private readonly IGameStateMachine _gameStateMachine;
+        private readonly IUIFactory _uiFactory;
+        private readonly IGameFactory _gameFactory;
+        private readonly IEntityContainer _entityContainer;
+        private readonly ISceneLoader _sceneLoader;
+        private readonly ILoadingCurtain _loadingCurtain;
+        private readonly IMultiplayerService _multiplayerService;
+        private const string GameScene = "Game";
+
+        public LoadGameState(IGameStateMachine gameStateMachine, IUIFactory uiFactory, IGameFactory gameFactory,
+            IEntityContainer entityContainer, ISceneLoader sceneLoader, ILoadingCurtain loadingCurtain, IMultiplayerService multiplayerService)
+        {
+            _gameStateMachine = gameStateMachine;
+            _uiFactory = uiFactory;
+            _gameFactory = gameFactory;
+            _entityContainer = entityContainer;
+            _sceneLoader = sceneLoader;
+            _loadingCurtain = loadingCurtain;
+            _multiplayerService = multiplayerService;
+        }
+
+        public void Enter()
+        {
+            _loadingCurtain.Show();
+            _sceneLoader.LoadScene(GameScene, CreateGame);
+        }
+
+        public void Exit()
+        {
+        }
+
+        private async void CreateGame()
+        {
+            await InitializeUI();
+            await InitializeGameplay();
+            FinishLoad();
+        }
+
+        private async UniTask InitializeUI()
+        {
+            await _uiFactory.WarmUpGameplay();
+            GameObject rootCanvas = await _uiFactory.CreateRootCanvas();
+            _entityContainer.GetEntity<TopPanelView>().ToggleGameplayStateView();
+        }
+
+        private async UniTask InitializeGameplay()
+        {
+            await _gameFactory.WarmUp();
+        }
+
+        private void FinishLoad()
+        {
+            _multiplayerService.Connect();
+            _gameStateMachine.Enter<GameplayState>();
+        }
+    }
+}

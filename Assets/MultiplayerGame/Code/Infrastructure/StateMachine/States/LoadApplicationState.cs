@@ -1,0 +1,73 @@
+using Cysharp.Threading.Tasks;
+using MultiplayerGame.Code.Core.UI;
+using MultiplayerGame.Code.Infrastructure.StateMachine.GameStateMachine;
+using MultiplayerGame.Code.Services.Factories.GameFactory;
+using MultiplayerGame.Code.Services.Factories.UIFactory;
+using MultiplayerGame.Code.Services.LoadingCurtain;
+using MultiplayerGame.Code.Services.Multiplayer;
+using MultiplayerGame.Code.Services.SaveLoad;
+using MultiplayerGame.Code.Services.Sound;
+using MultiplayerGame.Code.Services.StaticData;
+using UnityEngine;
+
+namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
+{
+    public class LoadApplicationState : IState
+    {
+        private readonly IGameStateMachine _gameStateMachine;
+        private readonly IStaticData _staticData;
+        private readonly ISaveLoad _saveLoad;
+        private readonly IMultiplayerService _multiplayerService;
+        private readonly IGameFactory _gameFactory;
+        private readonly IUIFactory _uiFactory;
+        private readonly ISoundService _soundService;
+        private readonly ILoadingCurtain _loadingCurtain;
+
+        public LoadApplicationState(IGameStateMachine gameStateMachine, IStaticData staticData, ISaveLoad saveLoad, IMultiplayerService multiplayerService,
+            IGameFactory gameFactory, IUIFactory uiFactory, ISoundService soundService, ILoadingCurtain loadingCurtain)
+        {
+            _staticData = staticData;
+            _saveLoad = saveLoad;
+            _multiplayerService = multiplayerService;
+            _gameFactory = gameFactory;
+            _uiFactory = uiFactory;
+            _soundService = soundService;
+            _loadingCurtain = loadingCurtain;
+            _gameStateMachine = gameStateMachine;
+        }
+        
+        public async void Enter()
+        {
+            _saveLoad.Load(_staticData.GameConfiguration.StartBalance, _staticData.GameConfiguration.DefaultSoundVolume);
+            _soundService.Construct(_saveLoad, _staticData.SoundData);
+            _multiplayerService.Construct(_gameFactory);
+            await CreatePersistentEntities();
+            _gameStateMachine.Enter<MenuState>();
+        }
+
+        public void Exit()
+        {
+        }
+
+        private async UniTask CreatePersistentEntities()
+        {
+            await _uiFactory.WarmUpPersistent();
+            GameObject persistentCanvas = await CreatePersistentCanvas();
+            TopPanelView topPanelView = await _uiFactory.CreateTopPanel(persistentCanvas.transform);
+            topPanelView.SetBackAction(() =>
+            {
+                _loadingCurtain.Show();
+                _gameStateMachine.Enter<MenuState>();
+            });
+        }
+
+        private async UniTask<GameObject> CreatePersistentCanvas()
+        {
+            GameObject persistentCanvas = await _uiFactory.CreateRootCanvas();
+            persistentCanvas.GetComponent<Canvas>().sortingOrder = 10;
+            persistentCanvas.name = "PersistentCanvas";
+            Object.DontDestroyOnLoad(persistentCanvas);
+            return persistentCanvas;
+        }
+    }
+}

@@ -1956,7 +1956,16 @@ namespace Photon.Realtime
         public bool BroadcastPropsChangeToAll { get { return this.broadcastPropsChangeToAll; } set { this.broadcastPropsChangeToAll = value; } }
         private bool broadcastPropsChangeToAll = true;
 
-        #if SERVERSDK
+        public RoomOptions()
+        {
+        }
+
+        public RoomOptions(int maxPlayers)
+        {
+            MaxPlayers = maxPlayers;
+        }
+
+#if SERVERSDK
         public bool CheckUserOnJoin { get; set; }
         #endif
     }
