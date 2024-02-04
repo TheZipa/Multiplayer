@@ -5,6 +5,7 @@ using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.Factories.GameFactory;
 using MultiplayerGame.Code.Services.Factories.StateFactory;
 using MultiplayerGame.Code.Services.Factories.UIFactory;
+using MultiplayerGame.Code.Services.Input;
 using MultiplayerGame.Code.Services.LoadingCurtain;
 using MultiplayerGame.Code.Services.Multiplayer;
 using MultiplayerGame.Code.Services.SaveLoad;
@@ -47,6 +48,7 @@ namespace MultiplayerGame.Code.Infrastructure.Entry
             builder.Register<AssetProvider>(Lifetime.Singleton).As<IAssets>();
             builder.Register<SceneLoader>(Lifetime.Singleton).As<ISceneLoader>();
             builder.Register<GameStateMachine>(Lifetime.Singleton).As<IGameStateMachine>();
+            builder.Register<InputService>(Lifetime.Singleton).As<IInputService>();
             builder.Register<SaveLoad>(Lifetime.Singleton).As<ISaveLoad>();
             builder.Register<StaticData>(Lifetime.Singleton).As<IStaticData>();
             builder.Register<StaticDataProvider>(Lifetime.Singleton).As<IStaticDataProvider>();

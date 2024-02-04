@@ -37,11 +37,13 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         public void Enter()
         {
             _loadingCurtain.Show();
-            _sceneLoader.LoadScene(GameScene, CreateGame);
+            _multiplayerService.OnRoomJoined += CreateGame;
+            _sceneLoader.LoadScene(GameScene, _multiplayerService.Connect);
         }
 
         public void Exit()
         {
+            _multiplayerService.OnRoomJoined -= CreateGame;
         }
 
         private async void CreateGame()
@@ -61,6 +63,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private async UniTask InitializeGameplay()
         {
             await _gameFactory.WarmUp();
+            _gameFactory.CreatePlayer();
         }
 
         private void FinishLoad()

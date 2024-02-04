@@ -1,4 +1,4 @@
-﻿using MultiplayerGame.Code.Services.Factories.GameFactory;
+﻿using System;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -7,9 +7,7 @@ namespace MultiplayerGame.Code.Services.Multiplayer
 {
     public class MultiplayerService : MonoBehaviourPunCallbacks, IMultiplayerService
     {
-        private IGameFactory _gameFactory;
-        
-        public void Construct(IGameFactory gameFactory) => _gameFactory = gameFactory;
+        public event Action OnRoomJoined;
 
         public void Connect()
         {
@@ -34,6 +32,7 @@ namespace MultiplayerGame.Code.Services.Multiplayer
         {
             base.OnJoinedRoom();
             Debug.Log("Connect finished");
+            OnRoomJoined?.Invoke();
         }
     }
 }

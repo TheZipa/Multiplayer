@@ -1,0 +1,19 @@
+﻿using MultiplayerGame.Code.Services.EntityContainer;
+using MultiplayerGame.Code.Services.Input;
+using UnityEngine;
+
+namespace MultiplayerGame.Code.Core.Player
+{
+    public class Player : MonoBehaviour, IFactoryEntity
+    {
+        [SerializeField] private PlayerMouseLook _playerMouseLook;
+        [SerializeField] private PlayerMovement _playerMovement;
+
+        public void Construct(IInputService inputService)
+        {
+            _playerMovement.Construct(inputService);
+            _playerMouseLook.Construct(inputService);
+            inputService.Enable();
+        }
+    }
+}

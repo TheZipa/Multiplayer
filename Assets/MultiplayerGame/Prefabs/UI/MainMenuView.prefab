@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.78745145, g: 0.9056604, b: 0.5767177, a: 1}
+  m_Color: {r: 0.40988785, g: 0.49267977, b: 0.5754717, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AspectMode: 0
-  m_AspectRatio: 2.1641026
+  m_AspectRatio: 2.012797
 --- !u!114 &6252481130935289462
 MonoBehaviour:
   m_ObjectHideFlags: 0

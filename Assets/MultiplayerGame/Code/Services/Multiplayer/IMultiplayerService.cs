@@ -1,10 +1,10 @@
-﻿using MultiplayerGame.Code.Services.Factories.GameFactory;
+﻿using System;
 
 namespace MultiplayerGame.Code.Services.Multiplayer
 {
     public interface IMultiplayerService
     {
-        void Construct(IGameFactory gameFactory);
         void Connect();
+        event Action OnRoomJoined;
     }
 }

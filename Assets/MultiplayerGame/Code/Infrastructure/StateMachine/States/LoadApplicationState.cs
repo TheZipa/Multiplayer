@@ -40,7 +40,6 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         {
             _saveLoad.Load(_staticData.GameConfiguration.StartBalance, _staticData.GameConfiguration.DefaultSoundVolume);
             _soundService.Construct(_saveLoad, _staticData.SoundData);
-            _multiplayerService.Construct(_gameFactory);
             await CreatePersistentEntities();
             _gameStateMachine.Enter<MenuState>();
         }
