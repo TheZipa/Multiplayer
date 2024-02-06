@@ -1,14 +1,19 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace MultiplayerGame.Code.Services.Input
 {
     public class InputService : IInputService
     {
+        public event Action OnJump;
+        
         public Vector2 MouseDelta => _playerInput.PlayerMap.MouseDelta.ReadValue<Vector2>();
         public Vector2 MovementAxes => new Vector2(_playerInput.PlayerMap.HorizontalMovement.ReadValue<float>(),
             _playerInput.PlayerMap.VerticalMovement.ReadValue<float>());
 
         private readonly PlayerInput _playerInput = new PlayerInput();
+
+        public InputService() => _playerInput.PlayerMap.Jump.performed += context => OnJump?.Invoke();
 
         public void Enable() => _playerInput.Enable();
 

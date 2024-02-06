@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace MultiplayerGame.Code.Services.Input
 {
@@ -8,5 +9,6 @@ namespace MultiplayerGame.Code.Services.Input
         void Disable();
         Vector2 MouseDelta { get; }
         Vector2 MovementAxes { get; }
+        event Action OnJump;
     }
 }

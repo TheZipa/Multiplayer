@@ -1,33 +1,86 @@
-﻿using MultiplayerGame.Code.Services.Input;
-using Sirenix.Utilities;
+using MultiplayerGame.Code.Services.Input;
 using UnityEngine;
 
-namespace MultiplayerGame.Code.Core.Player
+public class PlayerMovement : MonoBehaviour
 {
-    public class PlayerMovement : MonoBehaviour
+    [Header("Movement")]
+    [SerializeField] private float _moveSpeed;
+    [SerializeField] private float _groundDrag;
+    [SerializeField] private float _jumpForce;
+    [SerializeField] private float _jumpCooldown;
+    [SerializeField] private float _airMultiplier;
+    [SerializeField] private float _playerHeight;
+    [Header("References")]
+    [SerializeField] private Rigidbody _rigidbody;
+    [SerializeField] private Transform _orientation;
+    [SerializeField] private LayerMask _groundLayers;
+
+    private IInputService _inputService;
+    private Vector3 _moveDirection;
+    private Vector2 _moveInput;
+    private float _walkSpeed;
+    private float _sprintSpeed;
+    private bool _grounded;
+    private bool _readyToJump;
+
+    public void Construct(IInputService inputService)
     {
-        [SerializeField] private Rigidbody _rigidbody;
-        [SerializeField] private Vector3 _maxVelocityChange;
-        [SerializeField] private float _speed;
-        private IInputService _inputService;
+        _inputService = inputService;
+        _inputService.OnJump += TryJump;
+    }
+    
+    private void Start()
+    {
+        _rigidbody.freezeRotation = true;
+        _readyToJump = true;
+    }
+
+    private void Update()
+    {
+        if (_inputService is null) return;
+        DefinePlayerGrounded();
+        _moveInput = _inputService.MovementAxes;
+        SpeedControl();
+        _rigidbody.drag = _grounded ? _groundDrag : 0;
+    }
+
+    private void DefinePlayerGrounded() => _grounded = Physics.Raycast(transform.position,
+        Vector3.down, _playerHeight * 0.5f + 0.3f, _groundLayers);
+
+    private void FixedUpdate() => MovePlayer();
+
+    private void TryJump()
+    {
+        if (!_readyToJump || !_grounded) return;
+        _readyToJump = false;
+        Jump();
+        Invoke(nameof(ResetJump), _jumpCooldown);
+    }
+
+    private void MovePlayer()
+    {
+        _moveDirection = _orientation.forward * _moveInput.y + _orientation.right * _moveInput.x;
+        float speed = _moveSpeed * 10f;
+        if (_grounded) speed *= _airMultiplier;
+        _rigidbody.AddForce(_moveDirection.normalized * speed, ForceMode.VelocityChange);
+    }
+
+    private void SpeedControl()
+    {
+        Vector3 flatVelocity = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
         
-        public void Construct(IInputService inputService) => _inputService = inputService;
-
-        private void FixedUpdate()
+        if(flatVelocity.magnitude > _moveSpeed)
         {
-            if (_inputService is null) return;
-            _rigidbody.AddForce(GetVelocityFromInput(), ForceMode.VelocityChange);
-        }
-
-        private Vector3 GetVelocityFromInput()
-        {
-            Vector2 moveAxes = _inputService.MovementAxes;
-            Vector3 targetVelocity = transform.TransformDirection(moveAxes);
-            targetVelocity = new Vector2(targetVelocity.x + _speed, targetVelocity.y + _speed);
-
-            return moveAxes.magnitude > 0.5f
-                ? (targetVelocity - _rigidbody.velocity).Clamp(-_maxVelocityChange, _maxVelocityChange)
-                : Vector3.zero;
+            Vector3 clampedVelocity = flatVelocity.normalized * _moveSpeed;
+            _rigidbody.velocity = new Vector3(clampedVelocity.x, _rigidbody.velocity.y, clampedVelocity.z);
         }
     }
+
+    private void Jump()
+    {
+        _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
+        _rigidbody.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
+    }
+    
+    private void ResetJump() => _readyToJump = true;
 }

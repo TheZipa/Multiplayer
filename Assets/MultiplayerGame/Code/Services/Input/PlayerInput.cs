@@ -38,18 +38,27 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""HorizontalMovement"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""a4c4cd0d-660b-47a8-a9f0-9f951ec5d2b0"",
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""VerticalMovement"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""d3e5300c-0b9b-4989-ae29-7bd867e7ae22"",
                     ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""f9e6aa39-5460-4baa-bbd5-3ce8cd50322f"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -132,6 +141,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""VerticalMovement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""64c900a5-2e9a-4565-8000-6d60e727d8d5"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -149,6 +169,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_PlayerMap_MouseDelta = m_PlayerMap.FindAction("MouseDelta", throwIfNotFound: true);
         m_PlayerMap_HorizontalMovement = m_PlayerMap.FindAction("HorizontalMovement", throwIfNotFound: true);
         m_PlayerMap_VerticalMovement = m_PlayerMap.FindAction("VerticalMovement", throwIfNotFound: true);
+        m_PlayerMap_Jump = m_PlayerMap.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -211,6 +232,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerMap_MouseDelta;
     private readonly InputAction m_PlayerMap_HorizontalMovement;
     private readonly InputAction m_PlayerMap_VerticalMovement;
+    private readonly InputAction m_PlayerMap_Jump;
     public struct PlayerMapActions
     {
         private @PlayerInput m_Wrapper;
@@ -218,6 +240,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @MouseDelta => m_Wrapper.m_PlayerMap_MouseDelta;
         public InputAction @HorizontalMovement => m_Wrapper.m_PlayerMap_HorizontalMovement;
         public InputAction @VerticalMovement => m_Wrapper.m_PlayerMap_VerticalMovement;
+        public InputAction @Jump => m_Wrapper.m_PlayerMap_Jump;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -236,6 +259,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @VerticalMovement.started -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnVerticalMovement;
                 @VerticalMovement.performed -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnVerticalMovement;
                 @VerticalMovement.canceled -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnVerticalMovement;
+                @Jump.started -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnJump;
             }
             m_Wrapper.m_PlayerMapActionsCallbackInterface = instance;
             if (instance != null)
@@ -249,6 +275,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @VerticalMovement.started += instance.OnVerticalMovement;
                 @VerticalMovement.performed += instance.OnVerticalMovement;
                 @VerticalMovement.canceled += instance.OnVerticalMovement;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
     }
@@ -267,5 +296,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnMouseDelta(InputAction.CallbackContext context);
         void OnHorizontalMovement(InputAction.CallbackContext context);
         void OnVerticalMovement(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }

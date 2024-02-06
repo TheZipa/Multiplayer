@@ -16,18 +16,27 @@
                 },
                 {
                     "name": "HorizontalMovement",
-                    "type": "PassThrough",
+                    "type": "Value",
                     "id": "a4c4cd0d-660b-47a8-a9f0-9f951ec5d2b0",
                     "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "VerticalMovement",
-                    "type": "PassThrough",
+                    "type": "Value",
                     "id": "d3e5300c-0b9b-4989-ae29-7bd867e7ae22",
                     "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "f9e6aa39-5460-4baa-bbd5-3ce8cd50322f",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -110,6 +119,17 @@
                     "action": "VerticalMovement",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "64c900a5-2e9a-4565-8000-6d60e727d8d5",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
