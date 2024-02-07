@@ -29,14 +29,23 @@ namespace MultiplayerGame.Code.Services.Factories.GameFactory
 
         public async UniTask WarmUp()
         {
-            await _assets.Load<Player>(nameof(Player));
+            await _assets.Load<GameObject>(nameof(ThirdPersonPlayerCamera));
         }
 
         public Player CreatePlayer()
         {
             Player player = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity).GetComponent<Player>();
             player.Construct(_inputService);
+            _entityContainer.RegisterEntity(player);
             return player;
+        }
+
+        public async UniTask<ThirdPersonPlayerCamera> CreatePlayerCamera()
+        {
+            ThirdPersonPlayerCamera playerCamera = await Instantiate<ThirdPersonPlayerCamera>();
+            Player player = _entityContainer.GetEntity<Player>();
+            playerCamera.Construct(_inputService, player.Orientation, player.PlayerTransform, player.View);
+            return playerCamera;
         }
     }
 }

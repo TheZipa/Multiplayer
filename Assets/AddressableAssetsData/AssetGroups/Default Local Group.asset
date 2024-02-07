@@ -29,6 +29,10 @@ MonoBehaviour:
     m_Address: TopPanelView
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 5af34d4714b674238a56eba7d6dee437
+    m_Address: ThirdPersonPlayerCamera
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: bf9fea49eaefb44798f1a24471e47851, type: 2}
   m_SchemaSet:

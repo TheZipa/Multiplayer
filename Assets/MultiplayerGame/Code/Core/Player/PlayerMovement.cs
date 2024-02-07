@@ -3,19 +3,18 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Movement")]
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _groundDrag;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _jumpCooldown;
     [SerializeField] private float _airMultiplier;
     [SerializeField] private float _playerHeight;
-    [Header("References")]
-    [SerializeField] private Rigidbody _rigidbody;
-    [SerializeField] private Transform _orientation;
+    [Space]
     [SerializeField] private LayerMask _groundLayers;
 
     private IInputService _inputService;
+    private Rigidbody _rigidbody;
+    private Transform _orientation;
     private Vector3 _moveDirection;
     private Vector2 _moveInput;
     private float _walkSpeed;
@@ -23,8 +22,10 @@ public class PlayerMovement : MonoBehaviour
     private bool _grounded;
     private bool _readyToJump;
 
-    public void Construct(IInputService inputService)
+    public void Construct(IInputService inputService, Transform orientation, Rigidbody rigidbody)
     {
+        _orientation = orientation;
+        _rigidbody = rigidbody;
         _inputService = inputService;
         _inputService.OnJump += TryJump;
     }

@@ -1,3 +1,4 @@
+using Cinemachine;
 using MultiplayerGame.Code.Services.Input;
 using UnityEngine;
 
@@ -5,24 +6,28 @@ namespace MultiplayerGame.Code.Core.Player
 {
     public class ThirdPersonPlayerCamera : MonoBehaviour
     {
-        [SerializeField] private Transform _orientation;
-        [SerializeField] private Transform _player;
-        [SerializeField] private Transform _view;
-        [SerializeField] private Rigidbody _rb;
+        [SerializeField] private CinemachineFreeLook _freelookCamera;
         [SerializeField] private float _rotationSpeed;
+        private Transform _orientation;
+        private Transform _player;
+        private Transform _view;
         private IInputService _inputService;
         
-        public void Construct(IInputService inputService)
+        public void Construct(IInputService inputService, Transform orientation, Transform player, Transform view)
         {
             _inputService = inputService;
+            _orientation = orientation;
+            _player = player;
+            _view = view;
+            _freelookCamera.Follow = _freelookCamera.LookAt = view;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
 
         private void Update()
         {
-            SetViewDirection();
             if (_inputService is null) return;
+            SetViewDirection();
             ApplyInputRotation();
         }
 

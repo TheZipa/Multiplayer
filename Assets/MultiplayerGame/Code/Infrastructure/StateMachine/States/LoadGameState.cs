@@ -64,6 +64,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         {
             await _gameFactory.WarmUp();
             _gameFactory.CreatePlayer();
+            await _gameFactory.CreatePlayerCamera();
         }
 
         private void FinishLoad()

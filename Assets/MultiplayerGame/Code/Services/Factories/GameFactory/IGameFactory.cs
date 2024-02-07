@@ -8,5 +8,6 @@ namespace MultiplayerGame.Code.Services.Factories.GameFactory
     {
         UniTask WarmUp();
         Player CreatePlayer();
+        UniTask<ThirdPersonPlayerCamera> CreatePlayerCamera();
     }
 }

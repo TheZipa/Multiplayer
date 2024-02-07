@@ -6,13 +6,16 @@ namespace MultiplayerGame.Code.Core.Player
 {
     public class Player : MonoBehaviour, IFactoryEntity
     {
-        [SerializeField] private ThirdPersonPlayerCamera _thirdPersonCamera;
+        public Transform Orientation;
+        public Transform PlayerTransform;
+        public Transform View;
+        public Rigidbody Rigidbody;
+        [Space]
         [SerializeField] private PlayerMovement _playerMovement;
 
         public void Construct(IInputService inputService)
         {
-            _thirdPersonCamera.Construct(inputService);
-            _playerMovement.Construct(inputService);
+            _playerMovement.Construct(inputService, Orientation, Rigidbody);
             inputService.Enable();
         }
     }
