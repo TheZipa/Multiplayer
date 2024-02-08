@@ -16,6 +16,7 @@ namespace MultiplayerGame.Code.Core.Player
         public void Construct(IInputService inputService)
         {
             _playerMovement.Construct(inputService, Orientation, Rigidbody);
+            _playerMovement.enabled = true;
             inputService.Enable();
         }
     }

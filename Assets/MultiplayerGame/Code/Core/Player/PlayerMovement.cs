@@ -8,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _jumpCooldown;
     [SerializeField] private float _airMultiplier;
-    [SerializeField] private float _playerHeight;
     [Space]
     [SerializeField] private LayerMask _groundLayers;
 
@@ -45,10 +44,14 @@ public class PlayerMovement : MonoBehaviour
         _rigidbody.drag = _grounded ? _groundDrag : 0;
     }
 
-    private void DefinePlayerGrounded() => _grounded = Physics.Raycast(transform.position,
-        Vector3.down, _playerHeight * 0.5f + 0.3f, _groundLayers);
+    private void DefinePlayerGrounded() => _grounded = Physics.Raycast(_orientation.position, 
+        -_orientation.up * 1.3f, _groundLayers);
 
-    private void FixedUpdate() => MovePlayer();
+    private void FixedUpdate()
+    {
+        if (_moveInput == Vector2.zero) return;
+        MovePlayer();
+    }
 
     private void TryJump()
     {
