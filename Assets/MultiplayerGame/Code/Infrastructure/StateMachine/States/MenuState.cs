@@ -1,10 +1,10 @@
 using Cysharp.Threading.Tasks;
-using MultiplayerGame.Code.Core.UI;
 using MultiplayerGame.Code.Core.UI.MainMenu;
 using MultiplayerGame.Code.Infrastructure.StateMachine.GameStateMachine;
 using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.Factories.UIFactory;
 using MultiplayerGame.Code.Services.LoadingCurtain;
+using MultiplayerGame.Code.Services.Multiplayer;
 using MultiplayerGame.Code.Services.SceneLoader;
 using UnityEngine;
 
@@ -14,19 +14,20 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
     {
         private readonly IGameStateMachine _stateMachine;
         private readonly IUIFactory _uiFactory;
+        private readonly IMultiplayerService _multiplayerService;
         private readonly ISceneLoader _sceneLoader;
         private readonly IEntityContainer _entityContainer;
         private readonly ILoadingCurtain _loadingCurtain;
 
         private MainMenuView _mainMenuView;
-        private TopPanelView _topPanelView;
         private const string MenuScene = "Menu";
 
-        public MenuState(IGameStateMachine stateMachine, IUIFactory uiFactory,
+        public MenuState(IGameStateMachine stateMachine, IUIFactory uiFactory, IMultiplayerService _multiplayerService,
             ISceneLoader sceneLoader, IEntityContainer entityContainer, ILoadingCurtain loadingCurtain)
         {
             _stateMachine = stateMachine;
             _uiFactory = uiFactory;
+            this._multiplayerService = _multiplayerService;
             _sceneLoader = sceneLoader;
             _entityContainer = entityContainer;
             _loadingCurtain = loadingCurtain;
@@ -36,7 +37,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
 
         public void Exit()
         {
-            _mainMenuView.OnPlayClick -= LoadGame;
+            _mainMenuView.OnPlayClick -= TryShowRooms;
         }
 
         private async void PrepareMenu()
@@ -50,14 +51,18 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         {
             await _uiFactory.WarmUpMainMenu();
             GameObject rootCanvas = await _uiFactory.CreateRootCanvas();
-            _topPanelView = _entityContainer.GetEntity<TopPanelView>();
-            _topPanelView.ToggleMainMenuStateView();
             _mainMenuView =  await _uiFactory.InstantiateAsRegistered<MainMenuView>(rootCanvas.transform);
+        }
+
+        private void TryShowRooms()
+        {
+            if (!_mainMenuView.ValidatePlayer()) return;
+            Debug.Log("Rooms panel show");
         }
 
         private void Subscribe()
         {
-            _mainMenuView.OnPlayClick += LoadGame;
+            _mainMenuView.OnPlayClick += TryShowRooms;
         }
 
         private void LoadGame() => _stateMachine.Enter<LoadGameState>();

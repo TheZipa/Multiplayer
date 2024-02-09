@@ -25,10 +25,6 @@ MonoBehaviour:
     m_Address: MainMenuView
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 66008b1a966734d69bfc2d1e89bae640
-    m_Address: TopPanelView
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 5af34d4714b674238a56eba7d6dee437
     m_Address: ThirdPersonPlayerCamera
     m_ReadOnly: 0

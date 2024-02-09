@@ -57,7 +57,6 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         {
             await _uiFactory.WarmUpGameplay();
             GameObject rootCanvas = await _uiFactory.CreateRootCanvas();
-            _entityContainer.GetEntity<TopPanelView>().ToggleGameplayStateView();
         }
 
         private async UniTask InitializeGameplay()

@@ -18,19 +18,16 @@ namespace MultiplayerGame.Code.Services.Multiplayer
 
         public override void OnConnectedToMaster()
         {
-            base.OnConnectedToMaster();
             PhotonNetwork.JoinLobby();
         }
 
         public override void OnJoinedLobby()
         {
-            base.OnJoinedLobby();
-            PhotonNetwork.JoinOrCreateRoom("TestRoom", new RoomOptions(maxPlayers: 4), TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom("TestRoom", new RoomOptions(maxPlayers: 8), TypedLobby.Default);
         }
 
         public override void OnJoinedRoom()
         {
-            base.OnJoinedRoom();
             Debug.Log("Connect finished");
             OnRoomJoined?.Invoke();
         }

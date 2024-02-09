@@ -52,12 +52,6 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         {
             await _uiFactory.WarmUpPersistent();
             GameObject persistentCanvas = await CreatePersistentCanvas();
-            TopPanelView topPanelView = await _uiFactory.CreateTopPanel(persistentCanvas.transform);
-            topPanelView.SetBackAction(() =>
-            {
-                _loadingCurtain.Show();
-                _gameStateMachine.Enter<MenuState>();
-            });
         }
 
         private async UniTask<GameObject> CreatePersistentCanvas()

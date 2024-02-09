@@ -9,7 +9,6 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
     {
         UniTask<GameObject> CreateRootCanvas();
         UniTask WarmUpMainMenu();
-        UniTask<TopPanelView> CreateTopPanel(Transform parent);
         UniTask WarmUpGameplay();
         UniTask WarmUpPersistent();
     }

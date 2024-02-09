@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using MultiplayerGame.Code.Core.UI;
 using MultiplayerGame.Code.Core.UI.MainMenu;
 using MultiplayerGame.Code.Services.Assets;
 using MultiplayerGame.Code.Services.EntityContainer;
@@ -29,7 +28,6 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
         public async UniTask WarmUpPersistent()
         {
             await _assets.LoadPersistent<GameObject>(RootCanvasKey);
-            await _assets.LoadPersistent<GameObject>(nameof(TopPanelView));
         }
 
         public async UniTask WarmUpMainMenu()
@@ -43,12 +41,5 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
         }
 
         public async UniTask<GameObject> CreateRootCanvas() => await _assets.Instantiate<GameObject>(RootCanvasKey);
-
-        public async UniTask<TopPanelView> CreateTopPanel(Transform parent)
-        {
-            TopPanelView topPanelView = await InstantiateAsRegistered<TopPanelView>(parent);
-            topPanelView.Construct(_soundService);
-            return topPanelView;
-        }
     }
 }

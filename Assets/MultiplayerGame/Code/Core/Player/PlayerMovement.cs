@@ -38,7 +38,6 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         if (_inputService is null) return;
-        DefinePlayerGrounded();
         _moveInput = _inputService.MovementAxes;
         SpeedControl();
         _rigidbody.drag = _grounded ? _groundDrag : 0;
@@ -49,6 +48,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        DefinePlayerGrounded();
         if (_moveInput == Vector2.zero) return;
         MovePlayer();
     }
