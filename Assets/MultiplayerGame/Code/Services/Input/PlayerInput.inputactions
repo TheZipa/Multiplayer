@@ -6,10 +6,19 @@
             "id": "a6f821e6-9771-4f07-a1f0-86115cf8a53c",
             "actions": [
                 {
-                    "name": "MouseDelta",
+                    "name": "MouseX",
                     "type": "Value",
                     "id": "2a6d3253-ec74-416a-a929-b3168454fc48",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "MouseY",
+                    "type": "Value",
+                    "id": "74748574-a0da-4d59-9838-bdbf1cd1a0c6",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -46,11 +55,11 @@
                 {
                     "name": "",
                     "id": "768d98e5-0541-4dd0-861e-c703a04f9b92",
-                    "path": "<Mouse>/delta",
+                    "path": "<Mouse>/delta/x",
                     "interactions": "",
                     "processors": "",
                     "groups": "Player",
-                    "action": "MouseDelta",
+                    "action": "MouseX",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -128,6 +137,45 @@
                     "processors": "",
                     "groups": "",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "98d9442f-3ced-4ecb-bc20-f43a50bc8658",
+                    "path": "<Mouse>/delta/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Player",
+                    "action": "MouseY",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Navigation",
+            "id": "0135785e-9d48-454d-a262-0d9aebd98b0c",
+            "actions": [
+                {
+                    "name": "Escape",
+                    "type": "Button",
+                    "id": "b870831b-88ec-40d2-aae0-2eb26121146b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "534cba3c-1a5e-4bbc-831e-c260b24be735",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

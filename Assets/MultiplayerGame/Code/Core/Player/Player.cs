@@ -1,5 +1,6 @@
 ﻿using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.Input;
+using TMPro;
 using UnityEngine;
 
 namespace MultiplayerGame.Code.Core.Player
@@ -12,11 +13,13 @@ namespace MultiplayerGame.Code.Core.Player
         public Rigidbody Rigidbody;
         [Space]
         [SerializeField] private PlayerMovement _playerMovement;
+        [SerializeField] private TMP_Text _nicknameText;
 
         public void Construct(IInputService inputService)
         {
             _playerMovement.Construct(inputService, Orientation, Rigidbody);
             _playerMovement.enabled = true;
+            _nicknameText.gameObject.SetActive(false);
             inputService.Enable();
         }
     }

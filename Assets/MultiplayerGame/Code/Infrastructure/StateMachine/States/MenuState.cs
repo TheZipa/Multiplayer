@@ -58,6 +58,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         {
             if (!_mainMenuView.ValidatePlayer()) return;
             Debug.Log("Rooms panel show");
+            LoadGame();
         }
 
         private void Subscribe()

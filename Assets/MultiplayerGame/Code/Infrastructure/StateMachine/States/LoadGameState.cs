@@ -1,5 +1,5 @@
 using Cysharp.Threading.Tasks;
-using MultiplayerGame.Code.Core.UI;
+using MultiplayerGame.Code.Core.UI.Settings;
 using MultiplayerGame.Code.Infrastructure.StateMachine.GameStateMachine;
 using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.Factories.GameFactory;
@@ -57,6 +57,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         {
             await _uiFactory.WarmUpGameplay();
             GameObject rootCanvas = await _uiFactory.CreateRootCanvas();
+            await _uiFactory.InstantiateAsRegistered<InGameMenuPanel>(rootCanvas.transform);
         }
 
         private async UniTask InitializeGameplay()
@@ -66,10 +67,6 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             await _gameFactory.CreatePlayerCamera();
         }
 
-        private void FinishLoad()
-        {
-            _multiplayerService.Connect();
-            _gameStateMachine.Enter<GameplayState>();
-        }
+        private void FinishLoad() => _gameStateMachine.Enter<GameplayState>();
     }
 }

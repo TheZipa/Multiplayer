@@ -29,6 +29,10 @@ MonoBehaviour:
     m_Address: ThirdPersonPlayerCamera
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 0909a2c501414f34f922fcda8e5e01ef
+    m_Address: InGameMenuPanel
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: bf9fea49eaefb44798f1a24471e47851, type: 2}
   m_SchemaSet:

@@ -28,10 +28,19 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
             ""id"": ""a6f821e6-9771-4f07-a1f0-86115cf8a53c"",
             ""actions"": [
                 {
-                    ""name"": ""MouseDelta"",
+                    ""name"": ""MouseX"",
                     ""type"": ""Value"",
                     ""id"": ""2a6d3253-ec74-416a-a929-b3168454fc48"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MouseY"",
+                    ""type"": ""Value"",
+                    ""id"": ""74748574-a0da-4d59-9838-bdbf1cd1a0c6"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -68,11 +77,11 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""768d98e5-0541-4dd0-861e-c703a04f9b92"",
-                    ""path"": ""<Mouse>/delta"",
+                    ""path"": ""<Mouse>/delta/x"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Player"",
-                    ""action"": ""MouseDelta"",
+                    ""action"": ""MouseX"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -152,6 +161,45 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""98d9442f-3ced-4ecb-bc20-f43a50bc8658"",
+                    ""path"": ""<Mouse>/delta/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Player"",
+                    ""action"": ""MouseY"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Navigation"",
+            ""id"": ""0135785e-9d48-454d-a262-0d9aebd98b0c"",
+            ""actions"": [
+                {
+                    ""name"": ""Escape"",
+                    ""type"": ""Button"",
+                    ""id"": ""b870831b-88ec-40d2-aae0-2eb26121146b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""534cba3c-1a5e-4bbc-831e-c260b24be735"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -166,10 +214,14 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
 }");
         // PlayerMap
         m_PlayerMap = asset.FindActionMap("PlayerMap", throwIfNotFound: true);
-        m_PlayerMap_MouseDelta = m_PlayerMap.FindAction("MouseDelta", throwIfNotFound: true);
+        m_PlayerMap_MouseX = m_PlayerMap.FindAction("MouseX", throwIfNotFound: true);
+        m_PlayerMap_MouseY = m_PlayerMap.FindAction("MouseY", throwIfNotFound: true);
         m_PlayerMap_HorizontalMovement = m_PlayerMap.FindAction("HorizontalMovement", throwIfNotFound: true);
         m_PlayerMap_VerticalMovement = m_PlayerMap.FindAction("VerticalMovement", throwIfNotFound: true);
         m_PlayerMap_Jump = m_PlayerMap.FindAction("Jump", throwIfNotFound: true);
+        // Navigation
+        m_Navigation = asset.FindActionMap("Navigation", throwIfNotFound: true);
+        m_Navigation_Escape = m_Navigation.FindAction("Escape", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -229,7 +281,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     // PlayerMap
     private readonly InputActionMap m_PlayerMap;
     private IPlayerMapActions m_PlayerMapActionsCallbackInterface;
-    private readonly InputAction m_PlayerMap_MouseDelta;
+    private readonly InputAction m_PlayerMap_MouseX;
+    private readonly InputAction m_PlayerMap_MouseY;
     private readonly InputAction m_PlayerMap_HorizontalMovement;
     private readonly InputAction m_PlayerMap_VerticalMovement;
     private readonly InputAction m_PlayerMap_Jump;
@@ -237,7 +290,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     {
         private @PlayerInput m_Wrapper;
         public PlayerMapActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @MouseDelta => m_Wrapper.m_PlayerMap_MouseDelta;
+        public InputAction @MouseX => m_Wrapper.m_PlayerMap_MouseX;
+        public InputAction @MouseY => m_Wrapper.m_PlayerMap_MouseY;
         public InputAction @HorizontalMovement => m_Wrapper.m_PlayerMap_HorizontalMovement;
         public InputAction @VerticalMovement => m_Wrapper.m_PlayerMap_VerticalMovement;
         public InputAction @Jump => m_Wrapper.m_PlayerMap_Jump;
@@ -250,9 +304,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_PlayerMapActionsCallbackInterface != null)
             {
-                @MouseDelta.started -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnMouseDelta;
-                @MouseDelta.performed -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnMouseDelta;
-                @MouseDelta.canceled -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnMouseDelta;
+                @MouseX.started -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnMouseX;
+                @MouseX.performed -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnMouseX;
+                @MouseX.canceled -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnMouseX;
+                @MouseY.started -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnMouseY;
+                @MouseY.performed -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnMouseY;
+                @MouseY.canceled -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnMouseY;
                 @HorizontalMovement.started -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnHorizontalMovement;
                 @HorizontalMovement.performed -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnHorizontalMovement;
                 @HorizontalMovement.canceled -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnHorizontalMovement;
@@ -266,9 +323,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
             m_Wrapper.m_PlayerMapActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @MouseDelta.started += instance.OnMouseDelta;
-                @MouseDelta.performed += instance.OnMouseDelta;
-                @MouseDelta.canceled += instance.OnMouseDelta;
+                @MouseX.started += instance.OnMouseX;
+                @MouseX.performed += instance.OnMouseX;
+                @MouseX.canceled += instance.OnMouseX;
+                @MouseY.started += instance.OnMouseY;
+                @MouseY.performed += instance.OnMouseY;
+                @MouseY.canceled += instance.OnMouseY;
                 @HorizontalMovement.started += instance.OnHorizontalMovement;
                 @HorizontalMovement.performed += instance.OnHorizontalMovement;
                 @HorizontalMovement.canceled += instance.OnHorizontalMovement;
@@ -282,6 +342,39 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         }
     }
     public PlayerMapActions @PlayerMap => new PlayerMapActions(this);
+
+    // Navigation
+    private readonly InputActionMap m_Navigation;
+    private INavigationActions m_NavigationActionsCallbackInterface;
+    private readonly InputAction m_Navigation_Escape;
+    public struct NavigationActions
+    {
+        private @PlayerInput m_Wrapper;
+        public NavigationActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Escape => m_Wrapper.m_Navigation_Escape;
+        public InputActionMap Get() { return m_Wrapper.m_Navigation; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(NavigationActions set) { return set.Get(); }
+        public void SetCallbacks(INavigationActions instance)
+        {
+            if (m_Wrapper.m_NavigationActionsCallbackInterface != null)
+            {
+                @Escape.started -= m_Wrapper.m_NavigationActionsCallbackInterface.OnEscape;
+                @Escape.performed -= m_Wrapper.m_NavigationActionsCallbackInterface.OnEscape;
+                @Escape.canceled -= m_Wrapper.m_NavigationActionsCallbackInterface.OnEscape;
+            }
+            m_Wrapper.m_NavigationActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Escape.started += instance.OnEscape;
+                @Escape.performed += instance.OnEscape;
+                @Escape.canceled += instance.OnEscape;
+            }
+        }
+    }
+    public NavigationActions @Navigation => new NavigationActions(this);
     private int m_PlayerSchemeIndex = -1;
     public InputControlScheme PlayerScheme
     {
@@ -293,9 +386,14 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     }
     public interface IPlayerMapActions
     {
-        void OnMouseDelta(InputAction.CallbackContext context);
+        void OnMouseX(InputAction.CallbackContext context);
+        void OnMouseY(InputAction.CallbackContext context);
         void OnHorizontalMovement(InputAction.CallbackContext context);
         void OnVerticalMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+    }
+    public interface INavigationActions
+    {
+        void OnEscape(InputAction.CallbackContext context);
     }
 }

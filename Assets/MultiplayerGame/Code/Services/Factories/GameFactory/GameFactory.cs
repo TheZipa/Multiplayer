@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using MultiplayerGame.Code.Core.Player;
+using MultiplayerGame.Code.Core.UI.Settings;
 using MultiplayerGame.Code.Services.Assets;
 using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.Input;
@@ -44,7 +45,8 @@ namespace MultiplayerGame.Code.Services.Factories.GameFactory
         {
             ThirdPersonPlayerCamera playerCamera = await Instantiate<ThirdPersonPlayerCamera>();
             Player player = _entityContainer.GetEntity<Player>();
-            playerCamera.Construct(_inputService, player.Orientation, player.PlayerTransform, player.View);
+            playerCamera.Construct(_inputService, _entityContainer.GetEntity<InGameMenuPanel>(),
+                player.Orientation, player.PlayerTransform, player.View);
             return playerCamera;
         }
     }

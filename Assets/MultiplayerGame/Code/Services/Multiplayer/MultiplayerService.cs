@@ -9,6 +9,8 @@ namespace MultiplayerGame.Code.Services.Multiplayer
     {
         public event Action OnRoomJoined;
 
+        public MultiplayerService() => PhotonNetwork.AddCallbackTarget(this);
+
         public void Connect()
         {
             Debug.Log("Start connection");
@@ -16,16 +18,10 @@ namespace MultiplayerGame.Code.Services.Multiplayer
             PhotonNetwork.ConnectUsingSettings();
         }
 
-        public override void OnConnectedToMaster()
-        {
-            PhotonNetwork.JoinLobby();
-        }
+        public override void OnConnectedToMaster() => PhotonNetwork.JoinLobby();
 
-        public override void OnJoinedLobby()
-        {
-            PhotonNetwork.JoinOrCreateRoom("TestRoom", new RoomOptions(maxPlayers: 8), TypedLobby.Default);
-        }
-
+        public override void OnJoinedLobby() => PhotonNetwork.JoinOrCreateRoom("TestRoom", new RoomOptions(maxPlayers: 8), TypedLobby.Default);
+        
         public override void OnJoinedRoom()
         {
             Debug.Log("Connect finished");

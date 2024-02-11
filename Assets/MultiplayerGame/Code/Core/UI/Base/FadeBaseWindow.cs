@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MultiplayerGame.Code.Core.UI.Base
 {
-    public abstract class FadeBaseWindow : MonoBehaviour
+    public class FadeBaseWindow : MonoBehaviour
     {
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private float _fadeSpeed;
