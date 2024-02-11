@@ -1,6 +1,7 @@
 using Cinemachine;
 using MultiplayerGame.Code.Core.UI.Settings;
 using MultiplayerGame.Code.Services.Input;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace MultiplayerGame.Code.Core.Player
@@ -15,6 +16,9 @@ namespace MultiplayerGame.Code.Core.Player
         private IInputService _inputService;
         private InGameMenuPanel _inGameMenuPanel;
 
+        private readonly Vector3 _min = new(-1, 0, -1);
+        private readonly Vector3 _max = new(1, 0, 1);
+
         public void Construct(IInputService inputService, InGameMenuPanel inGameMenuPanel,
             Transform orientation, Transform player, Transform view)
         {
@@ -26,8 +30,8 @@ namespace MultiplayerGame.Code.Core.Player
             _freelookCamera.Follow = _freelookCamera.LookAt = view;
             _freelookCamera.m_XAxis.SetInputAxisProvider(0, _inputService);
             _freelookCamera.m_YAxis.SetInputAxisProvider(1, _inputService);
-            _inGameMenuPanel.OnShow += DisableCameraInput;
-            _inGameMenuPanel.OnHide += EnableCameraInput;
+            _inGameMenuPanel.OnShow += _inputService.Disable;
+            _inGameMenuPanel.OnHide += _inputService.Enable;
         }
 
         private void Update()
@@ -49,20 +53,8 @@ namespace MultiplayerGame.Code.Core.Player
             Vector3 inputDirection = _orientation.forward * input.y +_orientation.right * input.x;
             if (inputDirection == Vector3.zero) return;
 
-            Vector3 direction = Vector3.Slerp(_view.forward, inputDirection.normalized,
-                Time.deltaTime * _rotationSpeed);
-            direction.Set(direction.x, 0, direction.z);
-            _view.forward = direction;
-        }
-
-        private void DisableCameraInput()
-        {
-            _inputService.Disable();
-        }
-
-        private void EnableCameraInput()
-        {
-            _inputService.Enable();
+            Vector3 direction = Vector3.Slerp(_view.forward, inputDirection.normalized, Time.deltaTime * _rotationSpeed);
+            _view.forward = direction.Clamp(_min, _max);
         }
     }
 }

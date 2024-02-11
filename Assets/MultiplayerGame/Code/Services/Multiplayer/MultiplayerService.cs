@@ -9,8 +9,6 @@ namespace MultiplayerGame.Code.Services.Multiplayer
     {
         public event Action OnRoomJoined;
 
-        public MultiplayerService() => PhotonNetwork.AddCallbackTarget(this);
-
         public void Connect()
         {
             Debug.Log("Start connection");
