@@ -13,10 +13,12 @@ namespace MultiplayerGame.Code.Core.UI.MainMenu
         [SerializeField] private TMP_InputField _nicknameInputField;
         [SerializeField] private GameObject _wrongNameHint;
         [SerializeField] private Button _playButton;
+        [SerializeField] private Button _exitButton;
 
         private void Awake()
         {
             _playButton.onClick.AddListener(() => OnPlayClick?.Invoke());
+            _exitButton.onClick.AddListener(Application.Quit);
             _nicknameInputField.onSelect.AddListener(_ => _wrongNameHint.SetActive(false));
             _wrongNameHint.SetActive(false);
         }
