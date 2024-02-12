@@ -48,7 +48,6 @@ public class PlayerMovement : MonoBehaviour
     private void TryJump()
     {
         if (!_readyToJump || !_playerJumpCollider.InGrounded) return;
-        Debug.Log("Jump");
         _readyToJump = false;
         Jump();
         Invoke(nameof(ResetJump), _jumpCooldown);

@@ -15,6 +15,13 @@ namespace MultiplayerGame.Code.Data.Progress
             set { _balance = value; OnPropertyChanged?.Invoke(); }
         }
 
+        public string Nickname
+        { 
+            get => _nickname;
+            set { _nickname = value; OnPropertyChanged?.Invoke(); }
+        }
+
+        private string _nickname;
         private int _balance;
 
         public UserProgress(int balance, float defaultSoundVolume)

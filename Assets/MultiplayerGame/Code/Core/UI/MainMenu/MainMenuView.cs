@@ -1,6 +1,5 @@
 using System;
 using MultiplayerGame.Code.Services.EntityContainer;
-using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,12 +21,18 @@ namespace MultiplayerGame.Code.Core.UI.MainMenu
             _wrongNameHint.SetActive(false);
         }
 
-        public bool ValidatePlayer()
+        public void SetSavedNickname(string nickname) => _nicknameInputField.text = nickname;
+
+        public bool ValidatePlayer(out string nickname)
         {
-            if (!string.IsNullOrEmpty(_nicknameInputField.text)) return true;
+            if (string.IsNullOrEmpty(_nicknameInputField.text))
+            {
+                nickname = String.Empty;
+                return false;
+            }
             _wrongNameHint.SetActive(true);
-            PhotonNetwork.NickName = _nicknameInputField.text;
-            return false;
+            nickname = _nicknameInputField.text;
+            return true;
         }
     }
 }
