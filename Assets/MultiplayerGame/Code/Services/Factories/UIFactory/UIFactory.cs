@@ -1,11 +1,13 @@
 using Cysharp.Threading.Tasks;
 using MultiplayerGame.Code.Core.UI.MainMenu;
+using MultiplayerGame.Code.Core.UI.Rooms;
 using MultiplayerGame.Code.Services.Assets;
 using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.SaveLoad;
 using MultiplayerGame.Code.Services.Sound;
 using MultiplayerGame.Code.Services.StaticData;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace MultiplayerGame.Code.Services.Factories.UIFactory
 {
@@ -41,5 +43,15 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
         }
 
         public async UniTask<GameObject> CreateRootCanvas() => await _assets.Instantiate<GameObject>(RootCanvasKey);
+
+        public async UniTask<RoomListScreen> CreateRoomListScreen(Transform root)
+        {
+            RoomListScreen roomListScreen = await InstantiateAsRegistered<RoomListScreen>(root);
+            IObjectPool<RoomConnectField> objectPool = new ObjectPool<RoomConnectField>(() =>
+                    Instantiate<RoomConnectField>().GetAwaiter().GetResult(), roomField => roomField.Show(),
+                roomField => roomField.Hide());
+            roomListScreen.Construct(objectPool);
+            return roomListScreen;
+        }
     }
 }

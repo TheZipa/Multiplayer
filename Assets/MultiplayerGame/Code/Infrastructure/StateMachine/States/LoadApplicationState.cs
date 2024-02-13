@@ -18,21 +18,17 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private readonly IStaticData _staticData;
         private readonly ISaveLoad _saveLoad;
         private readonly IMultiplayerService _multiplayerService;
-        private readonly IGameFactory _gameFactory;
         private readonly IUIFactory _uiFactory;
         private readonly ISoundService _soundService;
-        private readonly ILoadingCurtain _loadingCurtain;
 
-        public LoadApplicationState(IGameStateMachine gameStateMachine, IStaticData staticData, ISaveLoad saveLoad, IMultiplayerService multiplayerService,
-            IGameFactory gameFactory, IUIFactory uiFactory, ISoundService soundService, ILoadingCurtain loadingCurtain)
+        public LoadApplicationState(IGameStateMachine gameStateMachine, IStaticData staticData, ISaveLoad saveLoad,
+            IMultiplayerService multiplayerService, IUIFactory uiFactory, ISoundService soundService)
         {
             _staticData = staticData;
             _saveLoad = saveLoad;
             _multiplayerService = multiplayerService;
-            _gameFactory = gameFactory;
             _uiFactory = uiFactory;
             _soundService = soundService;
-            _loadingCurtain = loadingCurtain;
             _gameStateMachine = gameStateMachine;
         }
         
@@ -41,12 +37,11 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             _saveLoad.Load(_staticData.GameConfiguration.StartBalance, _staticData.GameConfiguration.DefaultSoundVolume);
             _soundService.Construct(_saveLoad, _staticData.SoundData);
             await CreatePersistentEntities();
-            _gameStateMachine.Enter<MenuState>();
+            _multiplayerService.OnConnectingSuccess += EnterToMenu;
+            _multiplayerService.Connect();
         }
 
-        public void Exit()
-        {
-        }
+        public void Exit() => _multiplayerService.OnConnectingSuccess -= EnterToMenu;
 
         private async UniTask CreatePersistentEntities()
         {
@@ -62,5 +57,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             Object.DontDestroyOnLoad(persistentCanvas);
             return persistentCanvas;
         }
+
+        private void EnterToMenu() => _gameStateMachine.Enter<MenuState>();
     }
 }
