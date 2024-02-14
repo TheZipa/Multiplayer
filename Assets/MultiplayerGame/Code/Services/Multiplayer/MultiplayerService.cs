@@ -30,15 +30,15 @@ namespace MultiplayerGame.Code.Services.Multiplayer
 
         public override void OnJoinedLobby()
         {
+            Debug.Log("Connected to lobby");
             OnConnectingSuccess?.Invoke();
-            //PhotonNetwork.JoinOrCreateRoom("TestRoom", new RoomOptions(maxPlayers: 8), TypedLobby.Default);
         }
 
         public override void OnDisconnected(DisconnectCause cause) => OnConnectionClosed?.Invoke(cause);
 
         public override void OnJoinedRoom()
         {
-            Debug.Log("Connect finished");
+            Debug.Log("Connected to room");
             OnRoomJoined?.Invoke();
         }
 

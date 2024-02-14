@@ -35,6 +35,8 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
         public async UniTask WarmUpMainMenu()
         {
             await _assets.Load<GameObject>(nameof(MainMenuView));
+            await _assets.Load<GameObject>(nameof(RoomListScreen));
+            await _assets.Load<GameObject>(nameof(RoomConnectField));
         }
 
         public async UniTask WarmUpGameplay()
@@ -48,8 +50,8 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
         {
             RoomListScreen roomListScreen = await InstantiateAsRegistered<RoomListScreen>(root);
             IObjectPool<RoomConnectField> objectPool = new ObjectPool<RoomConnectField>(() =>
-                    Instantiate<RoomConnectField>().GetAwaiter().GetResult(), roomField => roomField.Show(),
-                roomField => roomField.Hide());
+                    Instantiate<RoomConnectField>(roomListScreen.RoomsContent).GetAwaiter().GetResult(), 
+                roomField => roomField.Show(), roomField => roomField.Hide());
             roomListScreen.Construct(objectPool);
             return roomListScreen;
         }
