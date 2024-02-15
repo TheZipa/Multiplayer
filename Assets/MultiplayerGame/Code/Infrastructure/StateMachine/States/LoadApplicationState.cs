@@ -58,6 +58,6 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             return persistentCanvas;
         }
 
-        private void EnterToMenu() => _gameStateMachine.Enter<MenuState>();
+        private void EnterToMenu() => _gameStateMachine.Enter<LoadMenuState>();
     }
 }

@@ -25,8 +25,10 @@ namespace MultiplayerGame.Code.Infrastructure.Entry
         private void CreateStates()
         {
             _gameStateMachine.AddState(_stateFactory.CreateState<LoadApplicationState>());
+            _gameStateMachine.AddState(_stateFactory.CreateState<LoadMenuState>());
             _gameStateMachine.AddState(_stateFactory.CreateState<LoadGameState>());
             _gameStateMachine.AddState(_stateFactory.CreateState<MenuState>());
+            _gameStateMachine.AddState(_stateFactory.CreateState<RoomState>());
             _gameStateMachine.AddState(_stateFactory.CreateState<GameplayState>());
         }
     }

@@ -30,9 +30,9 @@ namespace MultiplayerGame.Code.Core.UI.MainMenu
             if (string.IsNullOrEmpty(_nicknameInputField.text))
             {
                 nickname = String.Empty;
+                _wrongNameHint.SetActive(true);
                 return false;
             }
-            _wrongNameHint.SetActive(true);
             nickname = _nicknameInputField.text;
             return true;
         }

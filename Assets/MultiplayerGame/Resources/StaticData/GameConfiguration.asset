@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: GameConfiguration
   m_EditorClassIdentifier: 
   StartBalance: 100
+  MaxPlayers: 8
+  MinPlayersForStart: 2
   DefaultSoundVolume: 0.4

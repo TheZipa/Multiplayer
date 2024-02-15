@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
 using Photon.Realtime;
 
 namespace MultiplayerGame.Code.Services.Multiplayer
@@ -14,5 +15,11 @@ namespace MultiplayerGame.Code.Services.Multiplayer
         event Action<string> OnRoomJoinFailed;
         void JoinToRoom(string roomName);
         void CreateAndJoinRoom(string roomName, int maxPlayers);
+        event Action<Player> OnPlayerRoomJoin;
+        event Action<Player> OnPlayerRoomLeft;
+        Player[] GetPlayersInRoom();
+        bool IsMasterPlayer();
+        event Action<EventData> OnEventReceived;
+        void SendEvent(byte eventCode);
     }
 }

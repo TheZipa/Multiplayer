@@ -11,6 +11,7 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
 {
     public class RoomListScreen : FadeBaseWindow, IFactoryEntity
     {
+        public event Action OnRoomListClose;
         public event Action<string> OnRoomConnect;
         public event Action OnRoomCreateClick;
         public Transform RoomsContent;
@@ -23,8 +24,12 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
         protected override void OnAwake()
         {
             base.OnAwake();
-            _closeButton.onClick.AddListener(Hide);
             _createRoomButton.onClick.AddListener(() => OnRoomCreateClick?.Invoke());
+            _closeButton.onClick.AddListener(() =>
+            {
+                Hide();
+                OnRoomListClose?.Invoke();
+            });
         }
 
         public void Construct(IObjectPool<RoomConnectField> roomFieldsPool) => _roomFieldsPool = roomFieldsPool;
@@ -44,7 +49,8 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
 
         private void AddRoomToList(RoomInfo roomInfo)
         {
-            RoomConnectField roomConnectField = _roomFieldsPool.Get();
+            RoomConnectField roomConnectField = _rooms.TryGetValue(roomInfo.Name, out RoomConnectField roomField) 
+                ? roomField : _roomFieldsPool.Get();
             roomConnectField.UpdateRoomData(roomInfo);
             roomConnectField.OnRoomConnectPressed += SendRoomConnect;
             _rooms.Add(roomInfo.Name, roomConnectField);
@@ -52,7 +58,7 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
 
         private void RemoveRoomFromList(RoomInfo roomInfo)
         {
-            RoomConnectField roomConnectField = _rooms[roomInfo.Name];
+            if (!_rooms.TryGetValue(roomInfo.Name, out RoomConnectField roomConnectField)) return;
             roomConnectField.OnRoomConnectPressed -= SendRoomConnect;
             _roomFieldsPool.Release(roomConnectField);
             _rooms.Remove(roomInfo.Name);

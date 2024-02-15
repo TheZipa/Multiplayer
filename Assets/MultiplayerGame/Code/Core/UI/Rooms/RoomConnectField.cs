@@ -22,9 +22,11 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
 
         public void UpdateRoomData(string roomName, int playersInRoom, int maxPlayers)
         {
+            bool isRoomFulled = playersInRoom == maxPlayers;
             _roomName.text = roomName;
-            _roomPlayersCount.color = playersInRoom == maxPlayers ? Color.red : Color.green;
+            _roomPlayersCount.color = isRoomFulled ? Color.red : Color.green;
             _roomPlayersCount.text = $"{playersInRoom}/{maxPlayers}";
+            _connectButton.interactable = !isRoomFulled;
         }
     }
 }

@@ -65,8 +65,10 @@ namespace MultiplayerGame.Code.Infrastructure.Entry
         private static void RegisterStates(IContainerBuilder builder)
         {
             builder.Register<LoadApplicationState>(Lifetime.Singleton);
+            builder.Register<LoadMenuState>(Lifetime.Singleton);
             builder.Register<LoadGameState>(Lifetime.Singleton);
             builder.Register<MenuState>(Lifetime.Singleton);
+            builder.Register<RoomState>(Lifetime.Singleton);
             builder.Register<GameplayState>(Lifetime.Singleton);
         }
     }

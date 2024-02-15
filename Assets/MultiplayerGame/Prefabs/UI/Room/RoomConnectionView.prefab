@@ -282,6 +282,7 @@ GameObject:
   - component: {fileID: 1829699323451353970}
   - component: {fileID: 2068752591552227178}
   - component: {fileID: 2070828113467232845}
+  - component: {fileID: 8959790415032946320}
   m_Layer: 5
   m_Name: RoomConnectionView
   m_TagString: Untagged
@@ -393,3 +394,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8959790415032946320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8025010542905509427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dd150fc370b499585ff55cea4ef6947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _roomName: {fileID: 5295547443875687842}
+  _roomPlayersCount: {fileID: 415190169056957203}
+  _connectButton: {fileID: 2070828113467232845}

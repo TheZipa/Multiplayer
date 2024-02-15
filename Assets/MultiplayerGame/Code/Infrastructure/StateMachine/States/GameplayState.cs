@@ -42,6 +42,6 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             PhotonNetwork.Disconnect();
         }
 
-        private void ReturnToMainMenu() => _gameStateMachine.Enter<MenuState>();
+        private void ReturnToMainMenu() => _gameStateMachine.Enter<LoadMenuState>();
     }
 }

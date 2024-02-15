@@ -6,6 +6,8 @@ namespace MultiplayerGame.Code.Data.StaticData
     public class GameConfiguration : ScriptableObject
     {
         public int StartBalance;
+        public int MaxPlayers;
+        public int MinPlayersForStart;
         public float DefaultSoundVolume;
     }
 }

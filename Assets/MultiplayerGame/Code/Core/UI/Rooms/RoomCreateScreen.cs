@@ -1,12 +1,13 @@
 ﻿using System;
 using MultiplayerGame.Code.Core.UI.Base;
+using MultiplayerGame.Code.Services.EntityContainer;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace MultiplayerGame.Code.Core.UI.Rooms
 {
-    public class CreateRoomScreen : FadeBaseWindow
+    public class RoomCreateScreen : FadeBaseWindow, IFactoryEntity
     {
         public event Action<string> OnRoomCreated;
         

@@ -19,11 +19,10 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private readonly IEntityContainer _entityContainer;
         private readonly ISceneLoader _sceneLoader;
         private readonly ILoadingCurtain _loadingCurtain;
-        private readonly IMultiplayerService _multiplayerService;
         private const string GameScene = "Game";
 
         public LoadGameState(IGameStateMachine gameStateMachine, IUIFactory uiFactory, IGameFactory gameFactory,
-            IEntityContainer entityContainer, ISceneLoader sceneLoader, ILoadingCurtain loadingCurtain, IMultiplayerService multiplayerService)
+            IEntityContainer entityContainer, ISceneLoader sceneLoader, ILoadingCurtain loadingCurtain)
         {
             _gameStateMachine = gameStateMachine;
             _uiFactory = uiFactory;
@@ -31,19 +30,16 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             _entityContainer = entityContainer;
             _sceneLoader = sceneLoader;
             _loadingCurtain = loadingCurtain;
-            _multiplayerService = multiplayerService;
         }
 
         public void Enter()
         {
             _loadingCurtain.Show();
-            _multiplayerService.OnRoomJoined += CreateGame;
-            _sceneLoader.LoadScene(GameScene, _multiplayerService.Connect);
+            _sceneLoader.LoadScene(GameScene, CreateGame);
         }
 
         public void Exit()
         {
-            _multiplayerService.OnRoomJoined -= CreateGame;
         }
 
         private async void CreateGame()
