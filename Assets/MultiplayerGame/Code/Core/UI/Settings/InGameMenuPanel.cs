@@ -16,14 +16,14 @@ namespace MultiplayerGame.Code.Core.UI.Settings
         [SerializeField] private Button _returnToMainMenuButton;
         [SerializeField] private Button _yesReturnButton;
         [SerializeField] private Button _noReturnButton;
-        [SerializeField] private FadeBaseWindow _returnToMainMenuPopup;
+        [SerializeField] private GameObject _returnToMainMenuPopup;
 
         protected override void OnAwake()
         {
             base.OnAwake();
-            _returnToMainMenuButton.onClick.AddListener(_returnToMainMenuPopup.Show);
+            _returnToMainMenuButton.onClick.AddListener(() => _returnToMainMenuPopup.SetActive(true));
             _yesReturnButton.onClick.AddListener(() => OnReturnToMainMenu?.Invoke());
-            _noReturnButton.onClick.AddListener(_returnToMainMenuPopup.Hide);
+            _noReturnButton.onClick.AddListener(() => _returnToMainMenuPopup.SetActive(false));
         }
 
         public override void Hide()

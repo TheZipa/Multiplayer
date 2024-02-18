@@ -7,6 +7,7 @@ namespace MultiplayerGame.Code.Services.StaticData
     {
         SoundData SoundData { get; }
         GameConfiguration GameConfiguration { get; }
+        LocationData LocationData { get; }
         void LoadStaticData();
     }
 }

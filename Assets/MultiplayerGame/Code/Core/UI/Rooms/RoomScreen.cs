@@ -28,6 +28,7 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
             _leaveRoomButton.onClick.AddListener(() =>
             {
                 OnRoomLeft?.Invoke();
+                ClearPlayersList();
                 Hide();
             });
         }
@@ -68,6 +69,16 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
             roomPlayerField.Hide();
             _fields.Push(roomPlayerField);
             _roomPlayerFields.Remove(player.NickName);
+        }
+
+        private void ClearPlayersList()
+        {
+            foreach (RoomPlayerField playerField in _roomPlayerFields.Values)
+            {
+                playerField.Hide();
+                _fields.Push(playerField);
+            }
+            _roomPlayerFields.Clear();
         }
 
         private void OnDestroy()

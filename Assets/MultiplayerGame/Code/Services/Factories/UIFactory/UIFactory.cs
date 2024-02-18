@@ -64,7 +64,7 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
             IObjectPool<RoomConnectField> objectPool = new ObjectPool<RoomConnectField>(() =>
                     Instantiate<RoomConnectField>(roomListScreen.RoomsContent).GetAwaiter().GetResult(), 
                 roomField => roomField.Show(), roomField => roomField.Hide());
-            roomListScreen.Construct(objectPool);
+            roomListScreen.Construct(_multiplayerService, objectPool);
             return roomListScreen;
         }
 

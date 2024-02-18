@@ -1,7 +1,9 @@
+using System;
 using MultiplayerGame.Code.Core.UI.MainMenu;
 using MultiplayerGame.Code.Infrastructure.StateMachine.GameStateMachine;
 using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.LoadingCurtain;
+using MultiplayerGame.Code.Services.Multiplayer;
 using MultiplayerGame.Code.Services.SaveLoad;
 using Photon.Pun;
 
@@ -11,16 +13,18 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
     {
         private readonly IGameStateMachine _stateMachine;
         private readonly ISaveLoad _saveLoad;
+        private readonly IMultiplayerService _multiplayerService;
         private readonly ILoadingCurtain _loadingCurtain;
         private readonly IEntityContainer _entityContainer;
 
         private MainMenuView _mainMenuView;
 
-        public MenuState(IGameStateMachine stateMachine, ISaveLoad saveLoad,
+        public MenuState(IGameStateMachine stateMachine, ISaveLoad saveLoad, IMultiplayerService multiplayerService,
             ILoadingCurtain loadingCurtain, IEntityContainer entityContainer)
         {
             _stateMachine = stateMachine;
             _saveLoad = saveLoad;
+            _multiplayerService = multiplayerService;
             _loadingCurtain = loadingCurtain;
             _entityContainer = entityContainer;
         }
@@ -35,9 +39,16 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         public void Exit()
         {
             _mainMenuView.OnPlayClick -= ValidatePlayerNickname;
+            _mainMenuView.OnFreeGameClick -= CreateFreeGameRoom;
+            _multiplayerService.OnRoomJoined -= SwitchToFreeGame;
         }
 
-        private void Subscribe() => _mainMenuView.OnPlayClick += ValidatePlayerNickname;
+        private void Subscribe()
+        {
+            _mainMenuView.OnPlayClick += ValidatePlayerNickname;
+            _mainMenuView.OnFreeGameClick += CreateFreeGameRoom;
+            _multiplayerService.OnRoomJoined += SwitchToFreeGame;
+        }
 
         private void ValidatePlayerNickname()
         {
@@ -49,5 +60,13 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private void CacheEntities() => _mainMenuView = _entityContainer.GetEntity<MainMenuView>();
         
         private void SwitchToRoomList() => _stateMachine.Enter<RoomState>();
+
+        private void SwitchToFreeGame() => _stateMachine.Enter<LoadGameState>();
+
+        private void CreateFreeGameRoom()
+        {
+            _loadingCurtain.Show();
+            _multiplayerService.CreateAndJoinRoom(String.Empty, 1, false);
+        }
     }
 }

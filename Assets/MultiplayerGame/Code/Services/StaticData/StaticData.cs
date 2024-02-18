@@ -8,6 +8,7 @@ namespace MultiplayerGame.Code.Services.StaticData
     {
         public SoundData SoundData { get; private set; }
         public GameConfiguration GameConfiguration { get; private set; }
+        public LocationData LocationData { get; private set; }
 
         private readonly IStaticDataProvider _staticDataProvider;
 
@@ -21,6 +22,7 @@ namespace MultiplayerGame.Code.Services.StaticData
         {
             SoundData = _staticDataProvider.LoadSoundData();
             GameConfiguration = _staticDataProvider.LoadGameConfiguration();
+            LocationData = _staticDataProvider.LoadLocationData();
         }
     }
 }

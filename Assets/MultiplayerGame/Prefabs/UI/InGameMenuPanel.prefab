@@ -502,7 +502,7 @@ MonoBehaviour:
   _returnToMainMenuButton: {fileID: 2829362405057175601}
   _yesReturnButton: {fileID: 4522002866951476209}
   _noReturnButton: {fileID: 2848179221579653794}
-  _returnToMainMenuPopup: {fileID: 4578887731507719254}
+  _returnToMainMenuPopup: {fileID: 8686934948938429664}
 --- !u!1 &3608520215114383867
 GameObject:
   m_ObjectHideFlags: 0
@@ -1043,8 +1043,6 @@ GameObject:
   - component: {fileID: 555789920429385975}
   - component: {fileID: 1405192210201864369}
   - component: {fileID: 261789698355857807}
-  - component: {fileID: 9136653572132333912}
-  - component: {fileID: 4578887731507719254}
   m_Layer: 5
   m_Name: ReturnToMenuAcceptPopup
   m_TagString: Untagged
@@ -1113,32 +1111,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!225 &9136653572132333912
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8686934948938429664}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
---- !u!114 &4578887731507719254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8686934948938429664}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b38d31eb0e0d43cf957c919a64729d2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 9136653572132333912}
-  _fadeSpeed: 0.2
 --- !u!1 &9013695089144859832
 GameObject:
   m_ObjectHideFlags: 0

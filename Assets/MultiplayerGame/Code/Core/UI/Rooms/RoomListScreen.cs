@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MultiplayerGame.Code.Core.UI.Base;
 using MultiplayerGame.Code.Services.EntityContainer;
+using MultiplayerGame.Code.Services.Multiplayer;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -19,6 +20,7 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
         [SerializeField] private Button _createRoomButton;
 
         private readonly Dictionary<string, RoomConnectField> _rooms = new(10);
+        private IMultiplayerService _multiplayerService;
         private IObjectPool<RoomConnectField> _roomFieldsPool;
 
         protected override void OnAwake()
@@ -32,7 +34,12 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
             });
         }
 
-        public void Construct(IObjectPool<RoomConnectField> roomFieldsPool) => _roomFieldsPool = roomFieldsPool;
+        public void Construct(IMultiplayerService multiplayerService, IObjectPool<RoomConnectField> roomFieldsPool)
+        {
+            _multiplayerService = multiplayerService;
+            _multiplayerService.OnRoomsUpdated += RefreshRoomList;
+            _roomFieldsPool = roomFieldsPool;
+        }
 
         public void RefreshRoomList(List<RoomInfo> roomInfos)
         {
@@ -45,6 +52,17 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
                 else
                     AddRoomToList(roomInfo);
             }
+        }
+
+        public void Clear()
+        {
+            foreach (RoomConnectField room in _rooms.Values)
+            {
+                _roomFieldsPool.Release(room);
+                room.OnRoomConnectPressed -= SendRoomConnect;
+            }
+            _rooms.Clear();
+            _roomFieldsPool.Clear();
         }
 
         private void AddRoomToList(RoomInfo roomInfo)
@@ -68,13 +86,8 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
 
         private void OnDestroy()
         {
-            foreach (RoomConnectField room in _rooms.Values)
-            {
-                _roomFieldsPool.Release(room);
-                room.OnRoomConnectPressed -= SendRoomConnect;
-            }
-            _rooms.Clear();
-            _roomFieldsPool.Clear();
+            _multiplayerService.OnRoomsUpdated -= RefreshRoomList;
+            Clear();
         }
     }
 }
