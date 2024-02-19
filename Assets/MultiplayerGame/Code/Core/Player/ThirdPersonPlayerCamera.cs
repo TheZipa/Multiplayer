@@ -27,7 +27,7 @@ namespace MultiplayerGame.Code.Core.Player
             _orientation = orientation;
             _player = player;
             _view = view;
-            _freelookCamera.Follow = _freelookCamera.LookAt = view;
+            _freelookCamera.Follow = _freelookCamera.LookAt = orientation;
             _freelookCamera.m_XAxis.SetInputAxisProvider(0, _inputService);
             _freelookCamera.m_YAxis.SetInputAxisProvider(1, _inputService);
             _inGameMenuPanel.OnShow += _inputService.Disable;
