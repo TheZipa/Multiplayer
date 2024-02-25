@@ -25,10 +25,6 @@ MonoBehaviour:
     m_Address: MainMenuView
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 5af34d4714b674238a56eba7d6dee437
-    m_Address: ThirdPersonPlayerCamera
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 0909a2c501414f34f922fcda8e5e01ef
     m_Address: InGameMenuPanel
     m_ReadOnly: 0
@@ -51,6 +47,10 @@ MonoBehaviour:
     m_SerializedLabels: []
   - m_GUID: 27eda64e564954f7aa9757e0eaed54d0
     m_Address: RoomScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: a1a802ecaf6775746bb2a929fb554ad8
+    m_Address: CinemachineVirtualCamera
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

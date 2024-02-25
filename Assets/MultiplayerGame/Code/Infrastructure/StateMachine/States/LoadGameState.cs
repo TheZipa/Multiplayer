@@ -5,7 +5,6 @@ using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.Factories.GameFactory;
 using MultiplayerGame.Code.Services.Factories.UIFactory;
 using MultiplayerGame.Code.Services.LoadingCurtain;
-using MultiplayerGame.Code.Services.Multiplayer;
 using MultiplayerGame.Code.Services.SceneLoader;
 using UnityEngine;
 

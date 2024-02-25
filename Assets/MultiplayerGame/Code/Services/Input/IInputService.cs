@@ -1,15 +1,16 @@
 ﻿using System;
-using Cinemachine;
 using UnityEngine;
 
 namespace MultiplayerGame.Code.Services.Input
 {
-    public interface IInputService : AxisState.IInputAxisProvider
+    public interface IInputService
     {
+        event Action OnBack;
+        Vector2 Move { get; }
+        Vector2 Look { get; }
+        bool IsJump { get; }
+        bool IsSprint { get; }
         void Enable();
         void Disable();
-        Vector2 MovementAxes { get; }
-        event Action OnJump;
-        event Action OnEscape;
     }
 }

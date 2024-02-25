@@ -1,6 +1,6 @@
+using Cinemachine;
 using Cysharp.Threading.Tasks;
 using MultiplayerGame.Code.Core.Player;
-using MultiplayerGame.Code.Core.UI.Settings;
 using MultiplayerGame.Code.Services.Assets;
 using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.Input;
@@ -33,7 +33,7 @@ namespace MultiplayerGame.Code.Services.Factories.GameFactory
 
         public async UniTask WarmUp()
         {
-            await _assets.Load<GameObject>(nameof(ThirdPersonPlayerCamera));
+            await _assets.Load<GameObject>(nameof(CinemachineVirtualCamera));
         }
 
         public Player CreatePlayer()
@@ -44,12 +44,10 @@ namespace MultiplayerGame.Code.Services.Factories.GameFactory
             return player;
         }
 
-        public async UniTask<ThirdPersonPlayerCamera> CreatePlayerCamera()
+        public async UniTask<CinemachineVirtualCamera> CreatePlayerCamera()
         {
-            ThirdPersonPlayerCamera playerCamera = await Instantiate<ThirdPersonPlayerCamera>();
-            Player player = _entityContainer.GetEntity<Player>();
-            playerCamera.Construct(_inputService, _entityContainer.GetEntity<InGameMenuPanel>(),
-                player.Orientation, player.PlayerTransform, player.View);
+            CinemachineVirtualCamera playerCamera = await Instantiate<CinemachineVirtualCamera>();
+            playerCamera.Follow = _entityContainer.GetEntity<Player>().PlayerCamera.CinemachineCameraTarget.transform;
             return playerCamera;
         }
 

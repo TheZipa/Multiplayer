@@ -31,13 +31,13 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             _loadingCurtain.Hide();
             _inGameMenuPanel = _entityContainer.GetEntity<InGameMenuPanel>();
             _inGameMenuPanel.OnReturnToMainMenu += ReturnToMainMenu;
-            _inputService.OnEscape += _inGameMenuPanel.ToggleEnabled;
+            _inputService.OnBack += _inGameMenuPanel.ToggleEnabled;
             GameExtensions.DisableCursor();
         }
 
         public void Exit()
         {
-            _inputService.OnEscape -= _inGameMenuPanel.ToggleEnabled;
+            _inputService.OnBack -= _inGameMenuPanel.ToggleEnabled;
             _inGameMenuPanel.OnReturnToMainMenu -= ReturnToMainMenu;
             PhotonNetwork.Disconnect();
         }
