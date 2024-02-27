@@ -18,7 +18,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private readonly IEntityContainer _entityContainer;
         private readonly ISceneLoader _sceneLoader;
         private readonly ILoadingCurtain _loadingCurtain;
-        private const string GameScene = "Game";
+        private const string GameScene = "Demo_Day";
 
         public LoadGameState(IGameStateMachine gameStateMachine, IUIFactory uiFactory, IGameFactory gameFactory,
             IEntityContainer entityContainer, ISceneLoader sceneLoader, ILoadingCurtain loadingCurtain)

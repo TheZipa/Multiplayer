@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 638c572a86bf4814af0ccaf2c9f70f41, type: 3}
   m_Name: LocationData
   m_EditorClassIdentifier: 
-  PlayersSpawnLocation: {x: -4.45, y: 2.25, z: 0}
-  PlayerSpawnOffset: 2
+  PlayersSpawnLocation: {x: 30.66, y: 3.316, z: 105.04}
+  PlayerSpawnOffset: 1.5
