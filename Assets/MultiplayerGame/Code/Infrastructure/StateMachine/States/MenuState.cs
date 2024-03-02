@@ -1,10 +1,12 @@
 using System;
 using MultiplayerGame.Code.Core.UI.MainMenu;
+using MultiplayerGame.Code.Data.StaticData;
 using MultiplayerGame.Code.Infrastructure.StateMachine.GameStateMachine;
 using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.LoadingCurtain;
 using MultiplayerGame.Code.Services.Multiplayer;
 using MultiplayerGame.Code.Services.SaveLoad;
+using MultiplayerGame.Code.Services.StaticData;
 using Photon.Pun;
 
 namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
@@ -16,17 +18,19 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private readonly IMultiplayerService _multiplayerService;
         private readonly ILoadingCurtain _loadingCurtain;
         private readonly IEntityContainer _entityContainer;
+        private readonly IStaticData _staticData;
 
         private MainMenuView _mainMenuView;
 
         public MenuState(IGameStateMachine stateMachine, ISaveLoad saveLoad, IMultiplayerService multiplayerService,
-            ILoadingCurtain loadingCurtain, IEntityContainer entityContainer)
+            ILoadingCurtain loadingCurtain, IEntityContainer entityContainer, IStaticData staticData)
         {
             _stateMachine = stateMachine;
             _saveLoad = saveLoad;
             _multiplayerService = multiplayerService;
             _loadingCurtain = loadingCurtain;
             _entityContainer = entityContainer;
+            _staticData = staticData;
         }
 
         public void Enter()
@@ -61,12 +65,12 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         
         private void SwitchToRoomList() => _stateMachine.Enter<RoomState>();
 
-        private void SwitchToFreeGame() => _stateMachine.Enter<LoadGameState>();
+        private void SwitchToFreeGame() => _stateMachine.Enter<LoadGameState, MapData>(_staticData.WorldData.Maps[0]);
 
         private void CreateFreeGameRoom()
         {
             _loadingCurtain.Show();
-            _multiplayerService.CreateAndJoinRoom(String.Empty, 1, false);
+            _multiplayerService.CreateAndJoinRoom(String.Empty, 0, 1, false);
         }
     }
 }

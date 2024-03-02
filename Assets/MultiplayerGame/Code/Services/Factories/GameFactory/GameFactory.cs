@@ -36,10 +36,11 @@ namespace MultiplayerGame.Code.Services.Factories.GameFactory
             await _assets.Load<GameObject>(nameof(CinemachineVirtualCamera));
         }
 
-        public Player CreatePlayer()
+        public Player CreatePlayer(Vector3 spawnLocation)
         {
-            Player player = PhotonNetwork.Instantiate("Player", GetPlayerSpawnLocation(), Quaternion.identity).GetComponent<Player>();
+            Player player = PhotonNetwork.Instantiate("Player", GetPlayerSpawnLocationInCircle(spawnLocation), Quaternion.identity).GetComponent<Player>();
             player.Construct(_inputService, _saveLoad.Progress.Nickname);
+            player.transform.LookAt(spawnLocation);
             _entityContainer.RegisterEntity(player);
             return player;
         }
@@ -51,8 +52,14 @@ namespace MultiplayerGame.Code.Services.Factories.GameFactory
             return playerCamera;
         }
 
-        private Vector3 GetPlayerSpawnLocation() =>
-            _staticData.LocationData.PlayersSpawnLocation + Vector3.right * 
-            _staticData.LocationData.PlayerSpawnOffset * _multiplayerService.GetCurrentPlayerId();
+        private Vector3 GetPlayerSpawnLocationInCircle(Vector3 spawnLocation)
+        {
+            float radians = 2 * Mathf.PI / _multiplayerService.GetCurrentPlayerId();
+            float vertical = Mathf.Sin(radians);
+            float horizontal = Mathf.Cos(radians);
+            
+            Vector3 spawnDirection = new Vector3(horizontal, 0, vertical);
+            return spawnLocation + spawnDirection * _staticData.WorldData.PlayerSpawnRadius;
+        }
     }
 }

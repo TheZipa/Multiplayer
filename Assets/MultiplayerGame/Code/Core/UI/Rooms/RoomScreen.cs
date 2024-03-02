@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using MultiplayerGame.Code.Core.UI.Base;
+using MultiplayerGame.Code.Data.StaticData;
 using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.Multiplayer;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace MultiplayerGame.Code.Core.UI.Rooms
@@ -15,6 +18,8 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
         public Transform PlayerFieldContent;
         [SerializeField] private Button _leaveRoomButton;
         [SerializeField] private Button _startGameButton;
+        [SerializeField] private Image _mapPreview;
+        [SerializeField] private TextMeshProUGUI _mapName;
 
         private IMultiplayerService _multiplayerService;
         private Dictionary<string, RoomPlayerField> _roomPlayerFields;
@@ -48,6 +53,12 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
         {
             foreach (Photon.Realtime.Player player in _multiplayerService.GetPlayersInRoom()) AddPlayerToRoom(player);
             _startGameButton.gameObject.SetActive(_multiplayerService.IsMasterPlayer());
+        }
+
+        public void SetMapData(MapData mapData)
+        {
+            _mapPreview.sprite = mapData.MapPreview;
+            _mapName.text = mapData.Name;
         }
 
         private void TryStartGame()

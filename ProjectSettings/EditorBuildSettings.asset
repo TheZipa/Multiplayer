@@ -12,11 +12,11 @@ EditorBuildSettings:
     path: Assets/MultiplayerGame/Scenes/Menu.unity
     guid: 2524488b3534f4beb8f363210d69db83
   - enabled: 1
-    path: Assets/MultiplayerGame/Scenes/Game.unity
-    guid: 2230837b426c241539dc8a4261abd365
-  - enabled: 1
     path: Assets/PolygonNatureBiomes/PNB_Tropical_Jungle/Scenes/Demo_Day.unity
     guid: 9e02542a7c0dc284baefa27cbd0af22b
+  - enabled: 1
+    path: Assets/PolygonNatureBiomes/PNB_Tropical_Jungle/Scenes/Demo_Night.unity
+    guid: fa768b433c9929947bcdacd197abe923
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 123fbacef55de4b6e90eec8488dbe502, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7, type: 2}

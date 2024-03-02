@@ -1,3 +1,4 @@
+using MultiplayerGame.Code.Data.StaticData;
 using MultiplayerGame.Code.Infrastructure.StateMachine.GameStateMachine;
 using MultiplayerGame.Code.Infrastructure.StateMachine.States;
 using MultiplayerGame.Code.Services.Factories.StateFactory;
@@ -24,9 +25,9 @@ namespace MultiplayerGame.Code.Infrastructure.Entry
         
         private void CreateStates()
         {
+            _gameStateMachine.AddState<LoadGameState, MapData>(_stateFactory.CreateState<LoadGameState, MapData>());
             _gameStateMachine.AddState(_stateFactory.CreateState<LoadApplicationState>());
             _gameStateMachine.AddState(_stateFactory.CreateState<LoadMenuState>());
-            _gameStateMachine.AddState(_stateFactory.CreateState<LoadGameState>());
             _gameStateMachine.AddState(_stateFactory.CreateState<MenuState>());
             _gameStateMachine.AddState(_stateFactory.CreateState<RoomState>());
             _gameStateMachine.AddState(_stateFactory.CreateState<GameplayState>());

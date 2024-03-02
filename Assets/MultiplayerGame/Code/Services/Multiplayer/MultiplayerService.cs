@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using ExitGames.Client.Photon;
+using MultiplayerGame.Code.Data;
+using MultiplayerGame.Code.Extensions;
+using Newtonsoft.Json;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -31,12 +34,17 @@ namespace MultiplayerGame.Code.Services.Multiplayer
 
         public void JoinToRoom(string roomName) => PhotonNetwork.JoinRoom(roomName);
 
-        public void CreateAndJoinRoom(string roomName, int maxPlayers, bool isVisible) =>
-            PhotonNetwork.CreateRoom(roomName, new RoomOptions()
+        public void CreateAndJoinRoom(string roomName, int mapId, int maxPlayers, bool isVisible)
+        {
+            RoomOptions roomOptions = new()
             {
                 IsVisible = isVisible,
-                MaxPlayers = maxPlayers
-            }, TypedLobby.Default);
+                MaxPlayers = maxPlayers,
+                CustomRoomProperties = new Hashtable() { [RoomCustomDataKeys.MapId] = mapId}
+            };
+            Debug.Log(JsonConvert.SerializeObject(roomOptions.CustomRoomProperties));
+            PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default);
+        }
 
         public Player[] GetPlayersInRoom() => PhotonNetwork.CurrentRoom.Players.Values.ToArray();
 

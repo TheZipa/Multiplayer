@@ -7,6 +7,6 @@ namespace MultiplayerGame.Code.Services.StaticData.StaticDataProvider
     {
         SoundData LoadSoundData();
         GameConfiguration LoadGameConfiguration();
-        LocationData LoadLocationData();
+        WorldData LoadLocationData();
     }
 }

@@ -1,11 +1,15 @@
 using ExitGames.Client.Photon;
 using MultiplayerGame.Code.Core.UI.Rooms;
+using MultiplayerGame.Code.Core.UI.Rooms.CreateRoom;
+using MultiplayerGame.Code.Data;
+using MultiplayerGame.Code.Data.StaticData;
 using MultiplayerGame.Code.Infrastructure.StateMachine.GameStateMachine;
 using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.LoadingCurtain;
 using MultiplayerGame.Code.Services.Multiplayer;
 using MultiplayerGame.Code.Services.StaticData;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
@@ -22,6 +26,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private RoomListScreen _roomListScreen;
         private RoomScreen _roomScreen;
         private RoomCreateScreen _roomCreateScreen;
+        private MapData _currentMapData;
 
         public RoomState(IGameStateMachine stateMachine, IEntityContainer entityContainer, IMultiplayerService multiplayerService,
             IStaticData staticData, ILoadingCurtain loadingCurtain)
@@ -79,7 +84,11 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             _roomCreateScreen.OnRoomCreated -= CreateNewRoom;
         }
 
-        private void DisplayRoomJoinFail(string message) => Debug.LogWarning(message);
+        private void DisplayRoomJoinFail(string message)
+        {
+            _loadingCurtain.Hide();
+            Debug.LogWarning(message);
+        }
 
         private void SwitchToRoomScreen()
         {
@@ -89,10 +98,11 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             _loadingCurtain.Hide();
         }
 
-        private void CreateNewRoom(string roomName)
+        private void CreateNewRoom(string roomName, int mapId)
         {
             _loadingCurtain.Show();
-            _multiplayerService.CreateAndJoinRoom(roomName, _staticData.GameConfiguration.MaxPlayers, true);
+            _roomScreen.SetMapData(_currentMapData = _staticData.WorldData.Maps[mapId]);
+            _multiplayerService.CreateAndJoinRoom(roomName, mapId, _staticData.GameConfiguration.MaxPlayers, true);
         }
 
         private void LeaveFromRoom() => PhotonNetwork.LeaveRoom();
@@ -100,19 +110,21 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private void HandleStartGameEvent(EventData eventData)
         {
             if (eventData.Code != StartGameEventCode) return;
-            _stateMachine.Enter<LoadGameState>();
+            _stateMachine.Enter<LoadGameState, MapData>(_currentMapData);
         }
 
         private void StartGame()
         {
             PhotonNetwork.CurrentRoom.IsVisible = false;
             _multiplayerService.SendEvent(StartGameEventCode);
-            _stateMachine.Enter<LoadGameState>();
+            _stateMachine.Enter<LoadGameState, MapData>(_currentMapData);
         }
 
-        private void JoinToRoom(string roomName)
+        private void JoinToRoom(RoomInfo roomInfo)
         {
-            _multiplayerService.JoinToRoom(roomName);
+            _multiplayerService.JoinToRoom(roomInfo.Name);
+            _currentMapData = _staticData.WorldData.Maps[(int)roomInfo.CustomProperties[RoomCustomDataKeys.MapId]];
+            _roomScreen.SetMapData(_currentMapData);
             _loadingCurtain.Show();
         }
 

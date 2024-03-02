@@ -53,6 +53,14 @@ MonoBehaviour:
     m_Address: CinemachineVirtualCamera
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 788a8edf19c7d154c81f1dcf30d10874
+    m_Address: MapSelectElement
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 59bc4e165dffd8c42ae695e4f58ce4e9
+    m_Address: MapSelectPanel
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: bf9fea49eaefb44798f1a24471e47851, type: 2}
   m_SchemaSet:

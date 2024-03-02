@@ -8,12 +8,12 @@ namespace MultiplayerGame.Code.Services.StaticData.StaticDataProvider
     {
         private const string SoundDataPath = "StaticData/SoundData";
         private const string GameConfigurationPath = "StaticData/GameConfiguration";
-        private const string LocationDataPath = "StaticData/LocationData";
+        private const string WorldDataPath = "StaticData/WorldData";
         
         public SoundData LoadSoundData() => Resources.Load<SoundData>(SoundDataPath);
 
         public GameConfiguration LoadGameConfiguration() => Resources.Load<GameConfiguration>(GameConfigurationPath);
 
-        public LocationData LoadLocationData() => Resources.Load<LocationData>(LocationDataPath);
+        public WorldData LoadLocationData() => Resources.Load<WorldData>(WorldDataPath);
     }
 }

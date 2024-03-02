@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using MultiplayerGame.Code.Core.UI.MainMenu;
 using MultiplayerGame.Code.Core.UI.Rooms;
+using MultiplayerGame.Code.Core.UI.Rooms.CreateRoom;
 using MultiplayerGame.Code.Core.UI.Settings;
 using MultiplayerGame.Code.Services.Assets;
 using MultiplayerGame.Code.Services.EntityContainer;
@@ -42,6 +43,8 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
             await _assets.Load<GameObject>(nameof(RoomCreateScreen));
             await _assets.Load<GameObject>(nameof(RoomPlayerField));
             await _assets.Load<GameObject>(nameof(RoomScreen));
+            await _assets.Load<GameObject>(nameof(MapSelectElement));
+            await _assets.Load<GameObject>(nameof(MapSelectPanel));
         }
 
         public async UniTask WarmUpGameplay()
@@ -64,13 +67,16 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
             IObjectPool<RoomConnectField> objectPool = new ObjectPool<RoomConnectField>(() =>
                     Instantiate<RoomConnectField>(roomListScreen.RoomsContent).GetAwaiter().GetResult(), 
                 roomField => roomField.Show(), roomField => roomField.Hide());
-            roomListScreen.Construct(_multiplayerService, objectPool);
+            roomListScreen.Construct(_multiplayerService, objectPool, _staticData.WorldData.Maps);
             return roomListScreen;
         }
 
         public async UniTask<RoomCreateScreen> CreateRoomCreateScreen(Transform root)
         {
             RoomCreateScreen roomCreateScreen = await InstantiateAsRegistered<RoomCreateScreen>(root);
+            MapSelectPanel mapSelectPanel = await Instantiate<MapSelectPanel>(roomCreateScreen.transform);
+            mapSelectPanel.Construct(_soundService, await CreateMapSelectElements(mapSelectPanel.Content));
+            roomCreateScreen.Construct(_soundService, mapSelectPanel);
             return roomCreateScreen;
         }
 
@@ -92,6 +98,18 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
                 roomPlayerFields.Push(roomPlayerField);
             }
             return roomPlayerFields;
+        }
+
+        private async UniTask<MapSelectElement[]> CreateMapSelectElements(Transform content)
+        {
+            MapSelectElement[] mapSelectElements = new MapSelectElement[_staticData.WorldData.Maps.Length];
+            for (int i = 0; i < mapSelectElements.Length; i++)
+            {
+                MapSelectElement mapSelectElement = await Instantiate<MapSelectElement>(content);
+                mapSelectElement.Construct(_staticData.WorldData.Maps[i], i);
+                mapSelectElements[i] = mapSelectElement;
+            }
+            return mapSelectElements;
         }
     }
 }
