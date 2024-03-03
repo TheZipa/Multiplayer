@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using MultiplayerGame.Code.Core.UI;
 using MultiplayerGame.Code.Infrastructure.StateMachine.GameStateMachine;
 using MultiplayerGame.Code.Services.Factories.UIFactory;
 using MultiplayerGame.Code.Services.Multiplayer;
@@ -51,6 +52,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             await _uiFactory.CreateRoomListScreen(rootCanvas.transform);
             await _uiFactory.CreateRoomCreateScreen(rootCanvas.transform);
             await _uiFactory.CreateRoomScreen(rootCanvas.transform);
+            await _uiFactory.InstantiateAsRegistered<ErrorScreen>(rootCanvas.transform);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using MultiplayerGame.Code.Core.UI;
 using MultiplayerGame.Code.Core.UI.MainMenu;
 using MultiplayerGame.Code.Core.UI.Rooms;
 using MultiplayerGame.Code.Core.UI.Rooms.CreateRoom;
@@ -45,6 +46,7 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
             await _assets.Load<GameObject>(nameof(RoomScreen));
             await _assets.Load<GameObject>(nameof(MapSelectElement));
             await _assets.Load<GameObject>(nameof(MapSelectPanel));
+            await _assets.Load<GameObject>(nameof(ErrorScreen));
         }
 
         public async UniTask WarmUpGameplay()

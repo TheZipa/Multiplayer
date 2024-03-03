@@ -31,7 +31,12 @@ namespace MultiplayerGame.Code.Services.Multiplayer
             PhotonNetwork.ConnectUsingSettings();
         }
 
-        public void JoinToRoom(string roomName) => PhotonNetwork.JoinRoom(roomName);
+        public void JoinToRoom(string roomName)
+        {
+            if (!PhotonNetwork.IsConnected) OnRoomJoinFailed?.Invoke("You are not connected");
+            else if (PhotonNetwork.NetworkClientState != ClientState.JoinedLobby) OnRoomJoinFailed?.Invoke("Wrong client state");
+            else PhotonNetwork.JoinRoom(roomName);
+        }
 
         public void CreateAndJoinRoom(string roomName, int mapId, int maxPlayers, bool isVisible)
         {

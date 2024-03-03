@@ -1,4 +1,6 @@
+using Cysharp.Threading.Tasks;
 using ExitGames.Client.Photon;
+using MultiplayerGame.Code.Core.UI;
 using MultiplayerGame.Code.Core.UI.Rooms;
 using MultiplayerGame.Code.Core.UI.Rooms.CreateRoom;
 using MultiplayerGame.Code.Data;
@@ -85,10 +87,11 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             _roomCreateScreen.OnRoomCreated -= CreateNewRoom;
         }
 
-        private void DisplayRoomJoinFail(string message)
+        private async void DisplayRoomJoinFail(string message)
         {
+            await UniTask.Delay(1000);
             _loadingCurtain.Hide();
-            Debug.LogWarning(message);
+            _entityContainer.GetEntity<ErrorScreen>().ShowError(message);
         }
 
         private void SwitchToRoomScreen()
