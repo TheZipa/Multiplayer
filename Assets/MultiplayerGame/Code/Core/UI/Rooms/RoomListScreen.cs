@@ -1,13 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using MultiplayerGame.Code.Core.UI.Base;
 using MultiplayerGame.Code.Data;
 using MultiplayerGame.Code.Data.StaticData;
-using MultiplayerGame.Code.Extensions;
 using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.Multiplayer;
-using Newtonsoft.Json;
-using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -28,6 +27,7 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
         private IMultiplayerService _multiplayerService;
         private IObjectPool<RoomConnectField> _roomFieldsPool;
         private MapData[] _mapData;
+        private Coroutine _refreshRoomListRoutine;
 
         protected override void OnAwake()
         {
@@ -56,16 +56,24 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
                 room.OnRoomConnectPressed -= SendRoomConnect;
             }
             _rooms.Clear();
-            _roomFieldsPool.Clear();
         }
+        
+        public void StartRoomRefreshing() => _refreshRoomListRoutine = StartCoroutine(RefreshRoomList());
+
+        public void StopRoomRefreshing() => StopCoroutine(_refreshRoomListRoutine);
+
+        private void OnEnable() => _multiplayerService.LoadRoomList();
 
         private void RefreshRoomList(List<RoomInfo> roomInfos)
         {
+            foreach (string roomName in _rooms.Keys.ToArray())
+            {
+                if(roomInfos.All(r => r.Name != roomName)) RemoveRoomFromList(roomName);
+            }
+            
             foreach (RoomInfo roomInfo in roomInfos)
             {
-                if (roomInfo.RemovedFromList) 
-                    RemoveRoomFromList(roomInfo);
-                else if (_rooms.TryGetValue(roomInfo.Name, out RoomConnectField roomField))
+                if (_rooms.TryGetValue(roomInfo.Name, out RoomConnectField roomField))
                     roomField.UpdateRoomData(roomInfo, GetMapDataFromRoom(roomInfo));
                 else
                     AddRoomToList(roomInfo);
@@ -76,24 +84,31 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
         {
             RoomConnectField roomConnectField = _rooms.TryGetValue(roomInfo.Name, out RoomConnectField roomField) 
                 ? roomField : _roomFieldsPool.Get();
-            Debug.Log(JsonConvert.SerializeObject(roomInfo.CustomProperties));
             roomConnectField.UpdateRoomData(roomInfo, GetMapDataFromRoom(roomInfo));
             roomConnectField.OnRoomConnectPressed += SendRoomConnect;
             _rooms.Add(roomInfo.Name, roomConnectField);
         }
 
-        private void RemoveRoomFromList(RoomInfo roomInfo)
+        private void RemoveRoomFromList(string roomName)
         {
-            if (!_rooms.TryGetValue(roomInfo.Name, out RoomConnectField roomConnectField)) return;
+            if (!_rooms.TryGetValue(roomName, out RoomConnectField roomConnectField)) return;
             roomConnectField.OnRoomConnectPressed -= SendRoomConnect;
             _roomFieldsPool.Release(roomConnectField);
-            _rooms.Remove(roomInfo.Name);
+            _rooms.Remove(roomName);
         }
 
         private void SendRoomConnect(RoomInfo roomInfo) => OnRoomConnect?.Invoke(roomInfo);
 
-        private MapData GetMapDataFromRoom(RoomInfo roomInfo) =>
-            _mapData[(int)roomInfo.CustomProperties[RoomCustomDataKeys.MapId]];
+        private MapData GetMapDataFromRoom(RoomInfo roomInfo) => _mapData[(int)roomInfo.CustomProperties[RoomCustomDataKeys.MapId]];
+
+        private IEnumerator RefreshRoomList()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(2);
+                _multiplayerService.LoadRoomList();
+            }
+        }
 
         private void OnDestroy()
         {

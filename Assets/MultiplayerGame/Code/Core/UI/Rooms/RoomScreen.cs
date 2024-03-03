@@ -6,7 +6,6 @@ using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.Multiplayer;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace MultiplayerGame.Code.Core.UI.Rooms

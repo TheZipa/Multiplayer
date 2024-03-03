@@ -22,5 +22,6 @@ namespace MultiplayerGame.Code.Services.Multiplayer
         event Action<EventData> OnEventReceived;
         void SendEvent(byte eventCode);
         int GetCurrentPlayerId();
+        void LoadRoomList();
     }
 }

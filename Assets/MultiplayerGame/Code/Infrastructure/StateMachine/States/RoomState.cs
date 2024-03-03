@@ -43,6 +43,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             CacheEntities();
             Subscribe();
             _roomListScreen.Show();
+            _roomListScreen.StartRoomRefreshing();
         }
 
         public void Exit()
@@ -92,6 +93,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
 
         private void SwitchToRoomScreen()
         {
+            _roomListScreen.StopRoomRefreshing();
             _roomCreateScreen.Hide();
             _roomScreen.SetupRoom();
             _roomScreen.Show();
@@ -105,8 +107,12 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             _multiplayerService.CreateAndJoinRoom(roomName, mapId, _staticData.GameConfiguration.MaxPlayers, true);
         }
 
-        private void LeaveFromRoom() => PhotonNetwork.LeaveRoom();
-        
+        private void LeaveFromRoom()
+        {
+            _roomListScreen.StartRoomRefreshing();
+            PhotonNetwork.LeaveRoom();
+        }
+
         private void HandleStartGameEvent(EventData eventData)
         {
             if (eventData.Code != StartGameEventCode) return;

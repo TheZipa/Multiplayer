@@ -16,14 +16,14 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
         [SerializeField] private TextMeshProUGUI _roomPlayersCount;
         [SerializeField] private Image _mapPreview;
         [SerializeField] private Button _connectButton;
-        private RoomInfo _roomInfo;
+        public RoomInfo RoomInfo;
 
-        private void Awake() => _connectButton.onClick.AddListener(() => OnRoomConnectPressed?.Invoke(_roomInfo));
+        private void Awake() => _connectButton.onClick.AddListener(() => OnRoomConnectPressed?.Invoke(RoomInfo));
 
         public void UpdateRoomData(RoomInfo roomInfo, MapData mapData)
         {
             bool isRoomFulled = roomInfo.PlayerCount == roomInfo.MaxPlayers;
-            _roomInfo = roomInfo;
+            RoomInfo = roomInfo;
             _roomName.text = roomInfo.Name;
             _roomPlayersCount.color = isRoomFulled ? Color.red : Color.green;
             _roomPlayersCount.text = $"{roomInfo.PlayerCount}/{roomInfo.MaxPlayers}";

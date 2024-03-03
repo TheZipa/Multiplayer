@@ -2,6 +2,6 @@
 {
     public static class RoomCustomDataKeys
     {
-        public const string MapId = "MapId";
+        public const string MapId = "C0";
     }
 }
