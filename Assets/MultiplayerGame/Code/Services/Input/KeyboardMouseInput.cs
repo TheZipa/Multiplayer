@@ -1,4 +1,5 @@
 using System;
+using MultiplayerGame.Code.Extensions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,7 +15,7 @@ namespace MultiplayerGame.Code.Services.Input
 		public bool IsSprint => _userInput.Player.Sprint.IsPressed();
 		
 		private readonly UserInput _userInput;
-		private const string Escape = "Escape";
+		private const string Escape = "Back";
 
 		public KeyboardMouseInput()
 		{
@@ -27,18 +28,20 @@ namespace MultiplayerGame.Code.Services.Input
 		{
 			foreach (InputAction action in _userInput.asset.actionMaps[0].actions)
 			{
-				if (action.name == Escape) return;
+				if (action.name == Escape) continue;
 				action.Enable();
 			}
+			GameExtensions.DisableCursor();
 		}
 
 		public void Disable()
 		{
 			foreach (InputAction action in _userInput.asset.actionMaps[0].actions)
 			{
-				if (action.name == Escape) return;
+				if (action.name == Escape) continue;
 				action.Disable();
 			}
+			GameExtensions.EnableCursor();
 		}
 	}
 }

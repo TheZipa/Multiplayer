@@ -31,14 +31,17 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             _loadingCurtain.Hide();
             _inGameMenuPanel = _entityContainer.GetEntity<InGameMenuPanel>();
             _inGameMenuPanel.OnReturnToMainMenu += ReturnToMainMenu;
+            _inGameMenuPanel.OnShow += _inputService.Disable;
+            _inGameMenuPanel.OnHide += _inputService.Enable;
             _inputService.OnBack += _inGameMenuPanel.ToggleEnabled;
-            GameExtensions.DisableCursor();
         }
 
         public void Exit()
         {
             _inputService.OnBack -= _inGameMenuPanel.ToggleEnabled;
             _inGameMenuPanel.OnReturnToMainMenu -= ReturnToMainMenu;
+            _inGameMenuPanel.OnShow -= _inputService.Disable;
+            _inGameMenuPanel.OnHide -= _inputService.Enable;
             PhotonNetwork.Disconnect();
         }
 

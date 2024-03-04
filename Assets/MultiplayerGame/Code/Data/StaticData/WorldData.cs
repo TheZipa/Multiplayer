@@ -7,5 +7,7 @@ namespace MultiplayerGame.Code.Data.StaticData
     {
         public float PlayerSpawnRadius;
         public MapData[] Maps;
+
+        public MapData GetRandomMapData() => Maps[Random.Range(0, Maps.Length)];
     }
 }

@@ -65,7 +65,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         
         private void SwitchToRoomList() => _stateMachine.Enter<RoomState>();
 
-        private void SwitchToFreeGame() => _stateMachine.Enter<LoadGameState, MapData>(_staticData.WorldData.Maps[0]);
+        private void SwitchToFreeGame() => _stateMachine.Enter<LoadGameState, MapData>(_staticData.WorldData.GetRandomMapData());
 
         private void CreateFreeGameRoom()
         {
