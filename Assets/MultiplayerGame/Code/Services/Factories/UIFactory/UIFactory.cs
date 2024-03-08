@@ -44,6 +44,7 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
             await _assets.Load<GameObject>(nameof(RoomCreateScreen));
             await _assets.Load<GameObject>(nameof(RoomPlayerField));
             await _assets.Load<GameObject>(nameof(RoomScreen));
+            await _assets.Load<GameObject>(nameof(SettingsPanel));
             await _assets.Load<GameObject>(nameof(MapSelectElement));
             await _assets.Load<GameObject>(nameof(MapSelectPanel));
             await _assets.Load<GameObject>(nameof(ErrorScreen));
@@ -61,6 +62,13 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
             MainMenuView mainMenuView = await InstantiateAsRegistered<MainMenuView>(root);
             mainMenuView.SetSavedNickname(_saveLoad.Progress.Nickname);
             return mainMenuView;
+        }
+
+        public async UniTask<SettingsPanel> CreateSettingsPanel(Transform root)
+        {
+            SettingsPanel settingsPanel = await InstantiateAsRegistered<SettingsPanel>(root);
+            settingsPanel.Construct(_saveLoad);
+            return settingsPanel;
         }
 
         public async UniTask<RoomListScreen> CreateRoomListScreen(Transform root)

@@ -34,6 +34,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         {
             _saveLoad.Load(_staticData.GameConfiguration.StartBalance, _staticData.GameConfiguration.DefaultSoundVolume);
             _soundService.Construct(_saveLoad, _staticData.SoundData);
+            ApplySavedSettings();
             await CreatePersistentEntities();
             _gameStateMachine.Enter<LoadMenuState>();
         }
@@ -55,6 +56,13 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             persistentCanvas.name = "PersistentCanvas";
             Object.DontDestroyOnLoad(persistentCanvas);
             return persistentCanvas;
+        }
+
+        private void ApplySavedSettings()
+        {
+            QualitySettings.SetQualityLevel(_saveLoad.Progress.Settings.Quality);
+            Resolution resolution = Screen.resolutions[_saveLoad.Progress.Settings.Resolution];
+            Screen.SetResolution(resolution.width, resolution.height, _saveLoad.Progress.Settings.IsFullscreen);
         }
     }
 }

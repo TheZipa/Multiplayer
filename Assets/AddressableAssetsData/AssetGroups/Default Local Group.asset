@@ -65,6 +65,10 @@ MonoBehaviour:
     m_Address: ErrorScreen
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 85634807c13449243846ca7420d51c6a
+    m_Address: SettingsPanel
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: bf9fea49eaefb44798f1a24471e47851, type: 2}
   m_SchemaSet:

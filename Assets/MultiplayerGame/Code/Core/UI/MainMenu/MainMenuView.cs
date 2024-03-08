@@ -10,11 +10,13 @@ namespace MultiplayerGame.Code.Core.UI.MainMenu
     {
         public event Action OnPlayClick;
         public event Action OnFreeGameClick;
+        public event Action OnSettingsClick;
 
         [SerializeField] private TMP_InputField _nicknameInputField;
         [SerializeField] private GameObject _wrongNameHint;
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _freeGameButton;
+        [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _exitButton;
 
         private void Awake()
@@ -22,6 +24,7 @@ namespace MultiplayerGame.Code.Core.UI.MainMenu
             _playButton.onClick.AddListener(() => OnPlayClick?.Invoke());
             _exitButton.onClick.AddListener(Application.Quit);
             _freeGameButton.onClick.AddListener(() => OnFreeGameClick?.Invoke());
+            _settingsButton.onClick.AddListener(() => OnSettingsClick?.Invoke());
             _nicknameInputField.onSelect.AddListener(_ => _wrongNameHint.SetActive(false));
             _wrongNameHint.SetActive(false);
         }

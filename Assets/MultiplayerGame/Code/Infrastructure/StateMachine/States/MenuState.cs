@@ -1,5 +1,6 @@
 using System;
 using MultiplayerGame.Code.Core.UI.MainMenu;
+using MultiplayerGame.Code.Core.UI.Settings;
 using MultiplayerGame.Code.Data.StaticData;
 using MultiplayerGame.Code.Infrastructure.StateMachine.GameStateMachine;
 using MultiplayerGame.Code.Services.EntityContainer;
@@ -21,6 +22,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private readonly IStaticData _staticData;
 
         private MainMenuView _mainMenuView;
+        private SettingsPanel _settingsPanel;
 
         public MenuState(IGameStateMachine stateMachine, ISaveLoad saveLoad, IMultiplayerService multiplayerService,
             ILoadingCurtain loadingCurtain, IEntityContainer entityContainer, IStaticData staticData)
@@ -44,6 +46,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         {
             _mainMenuView.OnPlayClick -= ValidatePlayerNickname;
             _mainMenuView.OnFreeGameClick -= CreateFreeGameRoom;
+            _mainMenuView.OnSettingsClick -= _settingsPanel.Show;
             _multiplayerService.OnRoomJoined -= SwitchToFreeGame;
         }
 
@@ -51,6 +54,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         {
             _mainMenuView.OnPlayClick += ValidatePlayerNickname;
             _mainMenuView.OnFreeGameClick += CreateFreeGameRoom;
+            _mainMenuView.OnSettingsClick += _settingsPanel.Show;
             _multiplayerService.OnRoomJoined += SwitchToFreeGame;
         }
 
@@ -61,8 +65,12 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             SwitchToRoomList();
         }
 
-        private void CacheEntities() => _mainMenuView = _entityContainer.GetEntity<MainMenuView>();
-        
+        private void CacheEntities()
+        {
+            _mainMenuView = _entityContainer.GetEntity<MainMenuView>();
+            _settingsPanel = _entityContainer.GetEntity<SettingsPanel>();
+        }
+
         private void SwitchToRoomList() => _stateMachine.Enter<RoomState>();
 
         private void SwitchToFreeGame() => _stateMachine.Enter<LoadGameState, MapData>(_staticData.WorldData.GetRandomMapData());

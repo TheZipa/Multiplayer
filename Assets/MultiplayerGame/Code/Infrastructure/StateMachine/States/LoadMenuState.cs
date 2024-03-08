@@ -53,6 +53,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             await _uiFactory.CreateRoomCreateScreen(rootCanvas.transform);
             await _uiFactory.CreateRoomScreen(rootCanvas.transform);
             await _uiFactory.InstantiateAsRegistered<ErrorScreen>(rootCanvas.transform);
+            await _uiFactory.CreateSettingsPanel(rootCanvas.transform);
         }
     }
 }

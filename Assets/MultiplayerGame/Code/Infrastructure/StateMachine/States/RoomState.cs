@@ -12,7 +12,6 @@ using MultiplayerGame.Code.Services.Multiplayer;
 using MultiplayerGame.Code.Services.StaticData;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine;
 
 namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
 {
