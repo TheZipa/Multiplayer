@@ -10,6 +10,7 @@ namespace MultiplayerGame.Code.Core.Player
         private readonly int _animIDGrounded = Animator.StringToHash("Grounded");
         private readonly int _animIDJump = Animator.StringToHash("Jump");
         private readonly int _animIDFreeFall = Animator.StringToHash("FreeFall");
+        private readonly int _animIDCrouch = Animator.StringToHash("Crouch");
         private readonly int _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
 
         public void SetSpeedAnimation(float speed) => _animator.SetFloat(_animIDSpeed, speed);
@@ -19,6 +20,8 @@ namespace MultiplayerGame.Code.Core.Player
         public void SetGroundedAnimation(bool isGrounded) => _animator.SetBool(_animIDGrounded, isGrounded);
         
         public void SetJumpAnimation(bool isJump) => _animator.SetBool(_animIDJump, isJump);
+
+        public void SetCrouchAnimation(bool isCrouch) => _animator.SetBool(_animIDCrouch, isCrouch);
 
         public void SetFreeFallAnimation(bool isFreeFall) => _animator.SetBool(_animIDFreeFall, isFreeFall);
     }

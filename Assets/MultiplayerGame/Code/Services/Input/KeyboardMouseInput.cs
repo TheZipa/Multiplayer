@@ -13,6 +13,7 @@ namespace MultiplayerGame.Code.Services.Input
 		public Vector2 Look => _userInput.Player.Look.ReadValue<Vector2>();
 		public bool IsJump => _userInput.Player.Jump.IsPressed();
 		public bool IsSprint => _userInput.Player.Sprint.IsPressed();
+		public bool IsCrouch { get; private set; }
 		
 		private readonly UserInput _userInput;
 		private const string Escape = "Back";
@@ -21,6 +22,7 @@ namespace MultiplayerGame.Code.Services.Input
 		{
 			_userInput = new UserInput();
 			_userInput.Player.Back.performed += context => OnBack?.Invoke();
+			_userInput.Player.Crouch.performed += context => IsCrouch = !IsCrouch;
 			_userInput.Enable();
 		}
 

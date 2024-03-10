@@ -10,6 +10,7 @@ namespace MultiplayerGame.Code.Services.Input
         Vector2 Look { get; }
         bool IsJump { get; }
         bool IsSprint { get; }
+        bool IsCrouch { get; }
         void Enable();
         void Disable();
     }

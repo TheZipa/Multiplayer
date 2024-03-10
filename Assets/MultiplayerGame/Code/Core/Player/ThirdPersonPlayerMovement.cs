@@ -7,6 +7,7 @@ namespace MultiplayerGame.Code.Core.Player
     {
         [Header("Player")]
         public float MoveSpeed = 2.0f;
+        public float CrouchSpeed = 1.25f;
         public float SprintSpeed = 5.335f;
         [Range(0.0f, 0.3f)] public float RotationSmoothTime = 0.12f;
         public float SpeedChangeRate = 10.0f;
@@ -96,18 +97,21 @@ namespace MultiplayerGame.Code.Core.Player
 
         private void ApplySpeed()
         {
-            float targetSpeed = _inputService.IsSprint ? SprintSpeed : MoveSpeed;
+            bool crouch = ApplyCrouch();
+            float targetSpeed;
+            
+            if (crouch) targetSpeed = CrouchSpeed;
+            else if (_inputService.IsSprint) targetSpeed = SprintSpeed;
+            else targetSpeed = MoveSpeed;
+            
             if (_inputService.Move == Vector2.zero) targetSpeed = 0.0f;
 
             float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
             float speedOffset = 0.1f;
 
-            if (currentHorizontalSpeed < targetSpeed - speedOffset ||
-                currentHorizontalSpeed > targetSpeed + speedOffset)
+            if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
             {
-                _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed,
-                    Time.deltaTime * SpeedChangeRate);
-
+                _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed, Time.deltaTime * SpeedChangeRate);
                 _speed = Mathf.Round(_speed * 1000f) / 1000f;
             }
             else
@@ -132,10 +136,16 @@ namespace MultiplayerGame.Code.Core.Player
                 _jumpTimeoutDelta = JumpTimeout;
                 if (_fallTimeoutDelta >= 0.0f) _fallTimeoutDelta -= Time.deltaTime;
                 else _playerAnimator.SetFreeFallAnimation(true);
-                //_input.IsJump = false;
             }
             
             if (_verticalVelocity < _terminalVelocity) _verticalVelocity += Gravity * Time.deltaTime;
+        }
+
+        private bool ApplyCrouch()
+        {
+            bool crouch = _inputService.IsCrouch && Grounded;
+            _playerAnimator.SetCrouchAnimation(crouch);
+            return crouch;
         }
 
         private void Jump()

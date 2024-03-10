@@ -15,7 +15,6 @@ namespace MultiplayerGame.Code.Core.UI.Settings
         [SerializeField] private Toggle _isFullscreenToggle;
         [SerializeField] private TMP_Dropdown _resolutionDropdown;
         [SerializeField] private TMP_Dropdown _qualityDropdown;
-        [SerializeField] private Button _saveButton;
         [SerializeField] private Button _closeButton;
 
         private ISaveLoad _saveLoad;
@@ -24,8 +23,10 @@ namespace MultiplayerGame.Code.Core.UI.Settings
         protected override void OnAwake()
         {
             base.OnAwake();
-            _saveButton.onClick.AddListener(SaveSettings);
             _closeButton.onClick.AddListener(Hide);
+            _isFullscreenToggle.onValueChanged.AddListener(SaveFullscreen);
+            _resolutionDropdown.onValueChanged.AddListener(SaveResolution);
+            _qualityDropdown.onValueChanged.AddListener(SaveQuality);
         }
 
         public void Construct(ISaveLoad saveLoad)
@@ -55,15 +56,21 @@ namespace MultiplayerGame.Code.Core.UI.Settings
             _qualityDropdown.SetValueWithoutNotify(QualitySettings.GetQualityLevel());
             _qualityDropdown.RefreshShownValue();
         }
-        
-        private void SaveSettings()
+
+        private void SaveResolution(int resolutionIndex)
         {
-            _saveLoad.Progress.Settings.IsFullscreen = _isFullscreenToggle.isOn;
-            _saveLoad.Progress.Settings.Resolution = _resolutionDropdown.value;
-            _saveLoad.Progress.Settings.Quality = _qualityDropdown.value;
-            QualitySettings.SetQualityLevel(_qualityDropdown.value);
-            Resolution resolution = _allResolutions[_resolutionDropdown.value];
+            _saveLoad.Progress.Settings.Resolution = resolutionIndex;
+            Resolution resolution = _allResolutions[resolutionIndex];
             Screen.SetResolution(resolution.width, resolution.height, _isFullscreenToggle.isOn);
         }
+
+        private void SaveQuality(int qualityIndex)
+        {
+            _saveLoad.Progress.Settings.Quality = qualityIndex;
+            QualitySettings.SetQualityLevel(qualityIndex);
+        }
+
+        private void SaveFullscreen(bool isFullscreen) =>
+            Screen.fullScreen = _saveLoad.Progress.Settings.IsFullscreen = isFullscreen;
     }
 }

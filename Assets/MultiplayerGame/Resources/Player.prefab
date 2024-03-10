@@ -1356,6 +1356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveSpeed: 2
+  CrouchSpeed: 1.25
   SprintSpeed: 5.75
   RotationSmoothTime: 0.12
   SpeedChangeRate: 10
@@ -1485,6 +1486,9 @@ MonoBehaviour:
   - Type: 1
     SynchronizeType: 2
     Name: MotionSpeed
+  - Type: 4
+    SynchronizeType: 1
+    Name: Crouch
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
