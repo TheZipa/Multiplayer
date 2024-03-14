@@ -8,7 +8,6 @@ using MultiplayerGame.Code.Services.LoadingCurtain;
 using MultiplayerGame.Code.Services.Multiplayer;
 using MultiplayerGame.Code.Services.SaveLoad;
 using MultiplayerGame.Code.Services.StaticData;
-using Photon.Pun;
 
 namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
 {
@@ -44,7 +43,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
 
         public void Exit()
         {
-            _mainMenuView.OnPlayClick -= ValidatePlayerNickname;
+            _mainMenuView.OnPlayClick -= DefinePlayerAndShowRooms;
             _mainMenuView.OnFreeGameClick -= CreateFreeGameRoom;
             _mainMenuView.OnSettingsClick -= _settingsPanel.Show;
             _multiplayerService.OnRoomJoined -= SwitchToFreeGame;
@@ -52,16 +51,17 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
 
         private void Subscribe()
         {
-            _mainMenuView.OnPlayClick += ValidatePlayerNickname;
+            _mainMenuView.OnPlayClick += DefinePlayerAndShowRooms;
             _mainMenuView.OnFreeGameClick += CreateFreeGameRoom;
             _mainMenuView.OnSettingsClick += _settingsPanel.Show;
             _multiplayerService.OnRoomJoined += SwitchToFreeGame;
         }
 
-        private void ValidatePlayerNickname()
+        private void DefinePlayerAndShowRooms()
         {
-            if (!_mainMenuView.ValidatePlayer(out string nickname)) return;
-            PhotonNetwork.NickName = _saveLoad.Progress.Nickname = nickname;
+            if (!_mainMenuView.TryGetNickname(out string nickname)) return;
+            _saveLoad.Progress.Nickname = nickname;
+            _multiplayerService.SetNickname(nickname);
             SwitchToRoomList();
         }
 

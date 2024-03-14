@@ -1,10 +1,6 @@
 using Cysharp.Threading.Tasks;
-using MultiplayerGame.Code.Core.UI;
 using MultiplayerGame.Code.Infrastructure.StateMachine.GameStateMachine;
-using MultiplayerGame.Code.Services.Factories.GameFactory;
 using MultiplayerGame.Code.Services.Factories.UIFactory;
-using MultiplayerGame.Code.Services.LoadingCurtain;
-using MultiplayerGame.Code.Services.Multiplayer;
 using MultiplayerGame.Code.Services.SaveLoad;
 using MultiplayerGame.Code.Services.Sound;
 using MultiplayerGame.Code.Services.StaticData;

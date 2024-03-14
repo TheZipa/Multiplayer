@@ -13,15 +13,17 @@ namespace MultiplayerGame.Code.Services.Multiplayer
         event Action OnConnectingSuccess;
         event Action<DisconnectCause> OnConnectionClosed;
         event Action<string> OnRoomJoinFailed;
-        void JoinToRoom(string roomName);
-        void CreateAndJoinRoom(string roomName, int mapId, int maxPlayers, bool isVisible);
+        event Action<EventData> OnEventReceived;
         event Action<Player> OnPlayerRoomJoin;
         event Action<Player> OnPlayerRoomLeft;
+        void JoinToRoom(string roomName);
+        void CreateAndJoinRoom(string roomName, int mapId, int maxPlayers, bool isVisible);
+        void SetNickname(string nickname);
+        void LoadRoomList();
         Player[] GetPlayersInRoom();
         bool IsMasterPlayer();
-        event Action<EventData> OnEventReceived;
         void SendEvent(byte eventCode);
         int GetCurrentPlayerId();
-        void LoadRoomList();
+        void LeaveRoom();
     }
 }

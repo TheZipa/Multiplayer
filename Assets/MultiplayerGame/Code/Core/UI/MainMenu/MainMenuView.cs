@@ -31,7 +31,7 @@ namespace MultiplayerGame.Code.Core.UI.MainMenu
 
         public void SetSavedNickname(string nickname) => _nicknameInputField.text = nickname;
 
-        public bool ValidatePlayer(out string nickname)
+        public bool TryGetNickname(out string nickname)
         {
             if (string.IsNullOrEmpty(_nicknameInputField.text))
             {

@@ -31,6 +31,8 @@ namespace MultiplayerGame.Code.Services.Multiplayer
             PhotonNetwork.ConnectUsingSettings();
         }
 
+        public void SetNickname(string nickname) => PhotonNetwork.NickName = nickname;
+
         public void JoinToRoom(string roomName)
         {
             if (!PhotonNetwork.IsConnected) OnRoomJoinFailed?.Invoke("You are not connected");
@@ -55,6 +57,8 @@ namespace MultiplayerGame.Code.Services.Multiplayer
         public bool IsMasterPlayer() => PhotonNetwork.IsMasterClient;
 
         public int GetCurrentPlayerId() => PhotonNetwork.LocalPlayer.ActorNumber;
+
+        public void LeaveRoom() => PhotonNetwork.LeaveRoom();
 
         public void SendEvent(byte eventCode) => PhotonNetwork.RaiseEvent(eventCode, null, _eventOptions, SendOptions.SendReliable);
         

@@ -11,6 +11,7 @@ using MultiplayerGame.Code.Services.LoadingCurtain;
 using MultiplayerGame.Code.Services.Multiplayer;
 using MultiplayerGame.Code.Services.StaticData;
 using Photon.Pun;
+//using Photon.Pun;
 using Photon.Realtime;
 
 namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
@@ -112,7 +113,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private void LeaveFromRoom()
         {
             _roomListScreen.StartRoomRefreshing();
-            PhotonNetwork.LeaveRoom();
+            _multiplayerService.LeaveRoom();
         }
 
         private void HandleStartGameEvent(EventData eventData)
