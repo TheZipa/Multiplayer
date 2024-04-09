@@ -11,14 +11,13 @@ using MultiplayerGame.Code.Services.LoadingCurtain;
 using MultiplayerGame.Code.Services.Multiplayer;
 using MultiplayerGame.Code.Services.StaticData;
 using Photon.Pun;
-//using Photon.Pun;
 using Photon.Realtime;
 
 namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
 {
     public class RoomState : IState
     {
-        private const int StartGameEventCode = 1;
+        private const byte StartGameEventCode = 1;
         private readonly IGameStateMachine _stateMachine;
         private readonly IEntityContainer _entityContainer;
         private readonly IMultiplayerService _multiplayerService;
@@ -116,16 +115,16 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             _multiplayerService.LeaveRoom();
         }
 
-        private void HandleStartGameEvent(EventData eventData)
-        {
-            if (eventData.Code != StartGameEventCode) return;
-            _stateMachine.Enter<LoadGameState, MapData>(_currentMapData);
-        }
-
         private void StartGame()
         {
             PhotonNetwork.CurrentRoom.IsVisible = false;
             _multiplayerService.SendEvent(StartGameEventCode);
+            _stateMachine.Enter<LoadGameState, MapData>(_currentMapData);
+        }
+
+        private void HandleStartGameEvent(EventData eventData)
+        {
+            if (eventData.Code != StartGameEventCode) return;
             _stateMachine.Enter<LoadGameState, MapData>(_currentMapData);
         }
 

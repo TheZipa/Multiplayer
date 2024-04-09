@@ -19,11 +19,13 @@ namespace MultiplayerGame.Code.Services.Multiplayer
         public event Action<Player> OnPlayerRoomLeft;
         public event Action<DisconnectCause> OnConnectionClosed;
         public event Action<List<RoomInfo>> OnRoomsUpdated;
-
+        
         private readonly RaiseEventOptions _eventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         private readonly TypedLobby _mainLobby = new TypedLobby("mainLobby", LobbyType.SqlLobby);
+        private readonly string _roomSqlRequest = $"{RoomCustomDataKeys.MapId} != -1";
 
-        private void Awake() => PhotonNetwork.NetworkingClient.EventReceived += eventData => OnEventReceived?.Invoke(eventData);
+        private void Awake() => PhotonNetwork.NetworkingClient
+            .EventReceived += eventData => OnEventReceived?.Invoke(eventData);
 
         public void Connect()
         {
@@ -60,9 +62,10 @@ namespace MultiplayerGame.Code.Services.Multiplayer
 
         public void LeaveRoom() => PhotonNetwork.LeaveRoom();
 
-        public void SendEvent(byte eventCode) => PhotonNetwork.RaiseEvent(eventCode, null, _eventOptions, SendOptions.SendReliable);
+        public void SendEvent(byte eventCode) => PhotonNetwork
+            .RaiseEvent(eventCode, null, _eventOptions, SendOptions.SendReliable);
         
-        public void LoadRoomList() => PhotonNetwork.GetCustomRoomList(_mainLobby, RoomCustomDataKeys.MapId);
+        public void LoadRoomList() => PhotonNetwork.GetCustomRoomList(_mainLobby, _roomSqlRequest);
 
         public override void OnConnectedToMaster() => PhotonNetwork.JoinLobby(_mainLobby);
 

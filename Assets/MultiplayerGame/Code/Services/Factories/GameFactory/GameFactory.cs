@@ -38,7 +38,9 @@ namespace MultiplayerGame.Code.Services.Factories.GameFactory
 
         public Player CreatePlayer(Vector3 spawnLocation)
         {
-            Player player = PhotonNetwork.Instantiate("Player", GetPlayerSpawnLocationInCircle(spawnLocation), Quaternion.identity).GetComponent<Player>();
+            Player player = PhotonNetwork.Instantiate("Player", 
+                GetPlayerSpawnLocationInCircle(spawnLocation), Quaternion.identity)
+                .GetComponent<Player>();
             player.Construct(_inputService, _saveLoad.Progress.Nickname);
             player.transform.LookAt(spawnLocation);
             _entityContainer.RegisterEntity(player);
