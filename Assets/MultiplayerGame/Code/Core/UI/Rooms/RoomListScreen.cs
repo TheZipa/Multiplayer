@@ -24,7 +24,7 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
         [SerializeField] private Button _createRoomButton;
 
         private readonly Dictionary<string, RoomConnectField> _rooms = new(10);
-        private IMultiplayerService _multiplayerService;
+        private IMultiplayerRooms _multiplayerRooms;
         private IObjectPool<RoomConnectField> _roomFieldsPool;
         private MapData[] _mapData;
         private Coroutine _refreshRoomListRoutine;
@@ -40,12 +40,12 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
             });
         }
 
-        public void Construct(IMultiplayerService multiplayerService, IObjectPool<RoomConnectField> roomFieldsPool, MapData[] mapData)
+        public void Construct(IMultiplayerRooms multiplayerRooms, IObjectPool<RoomConnectField> roomFieldsPool, MapData[] mapData)
         {
             _mapData = mapData;
             _roomFieldsPool = roomFieldsPool;
-            _multiplayerService = multiplayerService;
-            _multiplayerService.OnRoomsUpdated += RefreshRoomList;
+            _multiplayerRooms = multiplayerRooms;
+            _multiplayerRooms.OnRoomsUpdated += RefreshRoomList;
         }
 
         public void Clear()
@@ -62,7 +62,7 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
 
         public void StopRoomRefreshing() => StopCoroutine(_refreshRoomListRoutine);
 
-        private void OnEnable() => _multiplayerService.LoadRoomList();
+        private void OnEnable() => _multiplayerRooms.LoadRoomList();
 
         private void RefreshRoomList(List<RoomInfo> roomInfos)
         {
@@ -106,13 +106,13 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
             while (true)
             {
                 yield return new WaitForSeconds(2);
-                _multiplayerService.LoadRoomList();
+                _multiplayerRooms.LoadRoomList();
             }
         }
 
         private void OnDestroy()
         {
-            _multiplayerService.OnRoomsUpdated -= RefreshRoomList;
+            _multiplayerRooms.OnRoomsUpdated -= RefreshRoomList;
             Clear();
         }
     }

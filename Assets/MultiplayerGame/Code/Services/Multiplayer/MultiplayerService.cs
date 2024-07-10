@@ -9,11 +9,12 @@ using UnityEngine;
 
 namespace MultiplayerGame.Code.Services.Multiplayer
 {
-    public class MultiplayerService : MonoBehaviourPunCallbacks, IMultiplayerService
+    public class MultiplayerService : MonoBehaviourPunCallbacks, IMultiplayerCommon, IMultiplayerConnection, IMultiplayerRooms
     {
         public event Action<EventData> OnEventReceived;
         public event Action OnRoomJoined;
         public event Action OnConnectingSuccess;
+        
         public event Action<string> OnRoomJoinFailed;
         public event Action<Player> OnPlayerRoomJoin;
         public event Action<Player> OnPlayerRoomLeft;

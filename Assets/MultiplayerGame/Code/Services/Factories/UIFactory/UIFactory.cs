@@ -8,8 +8,8 @@ using MultiplayerGame.Code.Core.UI.Settings;
 using MultiplayerGame.Code.Services.Assets;
 using MultiplayerGame.Code.Services.EntityContainer;
 using MultiplayerGame.Code.Services.Multiplayer;
+using MultiplayerGame.Code.Services.Quality;
 using MultiplayerGame.Code.Services.SaveLoad;
-using MultiplayerGame.Code.Services.Sound;
 using MultiplayerGame.Code.Services.StaticData;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -18,20 +18,20 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
 {
     public class UIFactory : BaseFactory.BaseFactory, IUIFactory
     {
-        private readonly IStaticData _staticData;
-        private readonly ISoundService _soundService;
         private readonly ISaveLoad _saveLoad;
-        private readonly IMultiplayerService _multiplayerService;
+        private readonly IStaticData _staticData;
+        private readonly IMultiplayerRooms _multiplayerRooms;
+        private readonly IQualityService _qualityService;
         private const string RootCanvasKey = "RootCanvas";
 
         public UIFactory(IStaticData staticData, IAssets assets, IEntityContainer entityContainer, 
-            ISoundService soundService, ISaveLoad saveLoad, IMultiplayerService multiplayerService)
+            IMultiplayerRooms multiplayerRooms, ISaveLoad saveLoad, IQualityService qualityService)
         : base(assets, entityContainer)
         {
             _staticData = staticData;
-            _soundService = soundService;
+            _multiplayerRooms = multiplayerRooms;
             _saveLoad = saveLoad;
-            _multiplayerService = multiplayerService;
+            _qualityService = qualityService;
         }
 
         public async UniTask WarmUpPersistent() => await _assets.LoadPersistent<GameObject>(RootCanvasKey);
@@ -67,7 +67,7 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
         public async UniTask<SettingsPanel> CreateSettingsPanel(Transform root)
         {
             SettingsPanel settingsPanel = await InstantiateAsRegistered<SettingsPanel>(root);
-            settingsPanel.Construct(_saveLoad);
+            settingsPanel.Construct(_qualityService);
             return settingsPanel;
         }
 
@@ -77,7 +77,7 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
             IObjectPool<RoomConnectField> objectPool = new ObjectPool<RoomConnectField>(() =>
                     Instantiate<RoomConnectField>(roomListScreen.RoomsContent).GetAwaiter().GetResult(), 
                 roomField => roomField.Show(), roomField => roomField.Hide());
-            roomListScreen.Construct(_multiplayerService, objectPool, _staticData.WorldData.Maps);
+            roomListScreen.Construct(_multiplayerRooms, objectPool, _staticData.WorldData.Maps);
             return roomListScreen;
         }
 
@@ -85,15 +85,15 @@ namespace MultiplayerGame.Code.Services.Factories.UIFactory
         {
             RoomCreateScreen roomCreateScreen = await InstantiateAsRegistered<RoomCreateScreen>(root);
             MapSelectPanel mapSelectPanel = await Instantiate<MapSelectPanel>(roomCreateScreen.transform);
-            mapSelectPanel.Construct(_soundService, await CreateMapSelectElements(mapSelectPanel.Content));
-            roomCreateScreen.Construct(_soundService, mapSelectPanel);
+            mapSelectPanel.Construct(await CreateMapSelectElements(mapSelectPanel.Content));
+            roomCreateScreen.Construct(mapSelectPanel);
             return roomCreateScreen;
         }
 
         public async UniTask<RoomScreen> CreateRoomScreen(Transform root)
         {
             RoomScreen roomScreen = await InstantiateAsRegistered<RoomScreen>(root);
-            roomScreen.Construct(_multiplayerService, await CreateRoomPlayerFields(roomScreen.PlayerFieldContent),
+            roomScreen.Construct(_multiplayerRooms, await CreateRoomPlayerFields(roomScreen.PlayerFieldContent),
                 _staticData.GameConfiguration.MaxPlayers, _staticData.GameConfiguration.MinPlayersForStart);
             return roomScreen;
         }

@@ -8,9 +8,9 @@ using MultiplayerGame.Code.Services.Factories.UIFactory;
 using MultiplayerGame.Code.Services.Input;
 using MultiplayerGame.Code.Services.LoadingCurtain;
 using MultiplayerGame.Code.Services.Multiplayer;
+using MultiplayerGame.Code.Services.Quality;
 using MultiplayerGame.Code.Services.SaveLoad;
 using MultiplayerGame.Code.Services.SceneLoader;
-using MultiplayerGame.Code.Services.Sound;
 using MultiplayerGame.Code.Services.StaticData;
 using MultiplayerGame.Code.Services.StaticData.StaticDataProvider;
 using UnityEngine;
@@ -21,14 +21,12 @@ namespace MultiplayerGame.Code.Infrastructure.Entry
 {
     public class GameLifetimeScope : LifetimeScope
     {
-        [SerializeField] private SoundService _soundService;
         [SerializeField] private LoadingCurtain _loadingCurtain;
         [SerializeField] private MultiplayerService _multiplayerService;
 
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterEntryPoint<GameEntry>();
-            builder.RegisterComponent(_soundService).AsImplementedInterfaces();
             builder.RegisterComponent(_loadingCurtain).AsImplementedInterfaces();
             builder.RegisterComponent(_multiplayerService).AsImplementedInterfaces();
 
@@ -53,6 +51,7 @@ namespace MultiplayerGame.Code.Infrastructure.Entry
             builder.Register<StaticData>(Lifetime.Singleton).As<IStaticData>();
             builder.Register<StaticDataProvider>(Lifetime.Singleton).As<IStaticDataProvider>();
             builder.Register<EntityContainer>(Lifetime.Singleton).As<IEntityContainer>();
+            builder.Register<QualitySettings>(Lifetime.Singleton).As<IQualityService>();
         }
 
         private static void RegisterFactories(IContainerBuilder builder)

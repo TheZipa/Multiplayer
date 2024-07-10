@@ -3925,7 +3925,7 @@ namespace Photon.Realtime
         /// </remarks>
         /// <param name="returnCode">Operation ReturnCode from the server.</param>
         /// <param name="message">Debug message for the error.</param>
-        void OnJoinRoomFailed(short returnCode, string message);
+        public void OnJoinRoomFailed(short returnCode, string message);
 
         /// <summary>
         /// Called when a previous OpJoinRandom call failed on the server.

@@ -9,7 +9,7 @@ namespace MultiplayerGame.Code.Core.Player
     public class Player : MonoBehaviour, IFactoryEntity
     {
         public PhotonView PhotonView;
-        public ThirdPersonPlayerMovement PlayerMovement;
+        public PlayerMovement PlayerMovement;
         public PlayerCamera PlayerCamera;
         [SerializeField] private TMP_Text _nicknameText;
 
@@ -17,7 +17,7 @@ namespace MultiplayerGame.Code.Core.Player
         {
             PlayerMovement.Construct(inputService);
             PlayerCamera.Construct(inputService);
-            PlayerMovement.enabled = PlayerCamera.enabled = true;
+            PlayerCamera.enabled = true;
             _nicknameText.gameObject.SetActive(false);
             PhotonView.RPC("SetNickname", RpcTarget.AllBuffered, nickname);
             inputService.Enable();

@@ -22,12 +22,9 @@ namespace MultiplayerGame.Code.Core.Player
 
         private void Start() => _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
-        private void LateUpdate()
-        {
-            CameraRotation();
-        }
-        
-        private void CameraRotation()
+        private void LateUpdate() => RotateCamera();
+
+        private void RotateCamera()
         {
             if (_inputService.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {

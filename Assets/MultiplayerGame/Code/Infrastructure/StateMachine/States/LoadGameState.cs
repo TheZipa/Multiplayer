@@ -6,7 +6,6 @@ using MultiplayerGame.Code.Services.Factories.GameFactory;
 using MultiplayerGame.Code.Services.Factories.UIFactory;
 using MultiplayerGame.Code.Services.LoadingCurtain;
 using MultiplayerGame.Code.Services.SceneLoader;
-using MultiplayerGame.Code.Services.StaticData;
 using UnityEngine;
 
 namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
@@ -16,18 +15,16 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private readonly IGameStateMachine _gameStateMachine;
         private readonly IUIFactory _uiFactory;
         private readonly IGameFactory _gameFactory;
-        private readonly IStaticData _staticData;
         private readonly ISceneLoader _sceneLoader;
         private readonly ILoadingCurtain _loadingCurtain;
         private MapData _currentMap;
 
-        public LoadGameState(IGameStateMachine gameStateMachine, IUIFactory uiFactory, IGameFactory gameFactory,
-            IStaticData staticData, ISceneLoader sceneLoader, ILoadingCurtain loadingCurtain)
+        public LoadGameState(IGameStateMachine gameStateMachine, IUIFactory uiFactory, 
+            IGameFactory gameFactory, ISceneLoader sceneLoader, ILoadingCurtain loadingCurtain)
         {
             _gameStateMachine = gameStateMachine;
             _uiFactory = uiFactory;
             _gameFactory = gameFactory;
-            _staticData = staticData;
             _sceneLoader = sceneLoader;
             _loadingCurtain = loadingCurtain;
         }

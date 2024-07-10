@@ -1,7 +1,6 @@
 ﻿using System;
 using MultiplayerGame.Code.Core.UI.Base;
 using MultiplayerGame.Code.Services.EntityContainer;
-using MultiplayerGame.Code.Services.Sound;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,7 +16,6 @@ namespace MultiplayerGame.Code.Core.UI.Rooms.CreateRoom
         [SerializeField] private TMP_InputField _roomNameInputField;
         [SerializeField] private TextMeshProUGUI _createRoomErrorMessage;
         [SerializeField] private int _minRoomNameCharacters;
-        private ISoundService _soundService;
         private MapSelectPanel _mapSelectPanel;
 
         protected override void OnAwake()
@@ -27,11 +25,7 @@ namespace MultiplayerGame.Code.Core.UI.Rooms.CreateRoom
             _createRoomButton.onClick.AddListener(ValidateRoomName);
         }
 
-        public void Construct(ISoundService soundService, MapSelectPanel mapSelectPanel)
-        {
-            _soundService = soundService;
-            _mapSelectPanel = mapSelectPanel;
-        }
+        public void Construct(MapSelectPanel mapSelectPanel) => _mapSelectPanel = mapSelectPanel;
 
         public override void Show()
         {

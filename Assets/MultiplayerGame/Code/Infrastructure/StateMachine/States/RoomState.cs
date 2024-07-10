@@ -20,7 +20,8 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private const byte StartGameEventCode = 1;
         private readonly IGameStateMachine _stateMachine;
         private readonly IEntityContainer _entityContainer;
-        private readonly IMultiplayerService _multiplayerService;
+        private readonly IMultiplayerRooms _multiplayerRooms;
+        private readonly IMultiplayerCommon _multiplayerCommon;
         private readonly IStaticData _staticData;
         private readonly ILoadingCurtain _loadingCurtain;
 
@@ -29,12 +30,13 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private RoomCreateScreen _roomCreateScreen;
         private MapData _currentMapData;
 
-        public RoomState(IGameStateMachine stateMachine, IEntityContainer entityContainer, IMultiplayerService multiplayerService,
-            IStaticData staticData, ILoadingCurtain loadingCurtain)
+        public RoomState(IGameStateMachine stateMachine, IEntityContainer entityContainer, IMultiplayerRooms multiplayerRooms,
+            IMultiplayerCommon multiplayerCommon, IStaticData staticData, ILoadingCurtain loadingCurtain)
         {
             _stateMachine = stateMachine;
             _entityContainer = entityContainer;
-            _multiplayerService = multiplayerService;
+            _multiplayerRooms = multiplayerRooms;
+            _multiplayerCommon = multiplayerCommon;
             _staticData = staticData;
             _loadingCurtain = loadingCurtain;
         }
@@ -62,9 +64,9 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
 
         private void Subscribe()
         {
-            _multiplayerService.OnRoomJoinFailed += DisplayRoomJoinFail;
-            _multiplayerService.OnRoomJoined += SwitchToRoomScreen;
-            _multiplayerService.OnEventReceived += HandleStartGameEvent;
+            _multiplayerRooms.OnRoomJoinFailed += DisplayRoomJoinFail;
+            _multiplayerRooms.OnRoomJoined += SwitchToRoomScreen;
+            _multiplayerCommon.OnEventReceived += HandleStartGameEvent;
             _roomScreen.OnRoomLeft += LeaveFromRoom;
             _roomScreen.OnStartGame += StartGame;
             _roomListScreen.OnRoomConnect += JoinToRoom;
@@ -75,9 +77,9 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         
         private void Unsubscribe()
         {
-            _multiplayerService.OnRoomJoinFailed -= DisplayRoomJoinFail;
-            _multiplayerService.OnRoomJoined -= SwitchToRoomScreen;
-            _multiplayerService.OnEventReceived -= HandleStartGameEvent;
+            _multiplayerRooms.OnRoomJoinFailed -= DisplayRoomJoinFail;
+            _multiplayerRooms.OnRoomJoined -= SwitchToRoomScreen;
+            _multiplayerCommon.OnEventReceived -= HandleStartGameEvent;
             _roomScreen.OnRoomLeft -= LeaveFromRoom;
             _roomScreen.OnStartGame -= StartGame;
             _roomListScreen.OnRoomConnect -= JoinToRoom;
@@ -106,19 +108,19 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         {
             _loadingCurtain.Show();
             _roomScreen.SetMapData(_currentMapData = _staticData.WorldData.Maps[mapId]);
-            _multiplayerService.CreateAndJoinRoom(roomName, mapId, _staticData.GameConfiguration.MaxPlayers, true);
+            _multiplayerRooms.CreateAndJoinRoom(roomName, mapId, _staticData.GameConfiguration.MaxPlayers, true);
         }
 
         private void LeaveFromRoom()
         {
             _roomListScreen.StartRoomRefreshing();
-            _multiplayerService.LeaveRoom();
+            _multiplayerRooms.LeaveRoom();
         }
 
         private void StartGame()
         {
             PhotonNetwork.CurrentRoom.IsVisible = false;
-            _multiplayerService.SendEvent(StartGameEventCode);
+            _multiplayerCommon.SendEvent(StartGameEventCode);
             _stateMachine.Enter<LoadGameState, MapData>(_currentMapData);
         }
 
@@ -130,7 +132,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
 
         private void JoinToRoom(RoomInfo roomInfo)
         {
-            _multiplayerService.JoinToRoom(roomInfo.Name);
+            _multiplayerRooms.JoinToRoom(roomInfo.Name);
             _currentMapData = _staticData.WorldData.Maps[(int)roomInfo.CustomProperties[RoomCustomDataKeys.MapId]];
             _roomScreen.SetMapData(_currentMapData);
             _loadingCurtain.Show();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MultiplayerGame.Code.Core.UI.Base;
 using MultiplayerGame.Code.Services.EntityContainer;
-using MultiplayerGame.Code.Services.SaveLoad;
+using MultiplayerGame.Code.Services.Quality;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,22 +17,21 @@ namespace MultiplayerGame.Code.Core.UI.Settings
         [SerializeField] private TMP_Dropdown _qualityDropdown;
         [SerializeField] private Button _closeButton;
 
-        private ISaveLoad _saveLoad;
-        private Resolution[] _allResolutions;
+        private IQualityService _qualityService;
 
         protected override void OnAwake()
         {
             base.OnAwake();
             _closeButton.onClick.AddListener(Hide);
-            _isFullscreenToggle.onValueChanged.AddListener(SaveFullscreen);
-            _resolutionDropdown.onValueChanged.AddListener(SaveResolution);
-            _qualityDropdown.onValueChanged.AddListener(SaveQuality);
+            _isFullscreenToggle.onValueChanged.AddListener(_qualityService.SetFullscreen);
+            _resolutionDropdown.onValueChanged.AddListener(resolutionIndex => 
+                _qualityService.SetResolution(resolutionIndex, _isFullscreenToggle.isOn));
+            _qualityDropdown.onValueChanged.AddListener(_qualityService.SetQuality);
         }
 
-        public void Construct(ISaveLoad saveLoad)
+        public void Construct(IQualityService qualityService)
         {
-            _saveLoad = saveLoad;
-            _allResolutions = Screen.resolutions;
+            _qualityService = qualityService;
             _isFullscreenToggle.isOn = Screen.fullScreen;
             ConstructResolutions();
             ConstructQualities();
@@ -42,10 +41,10 @@ namespace MultiplayerGame.Code.Core.UI.Settings
         {
             _resolutionDropdown.ClearOptions();
             List<string> resolutionOptions = new List<string>(15);
-            foreach (Resolution resolution in _allResolutions)
-                resolutionOptions.Add($"{resolution.width}x{resolution.height} {resolution.refreshRate} Hz");
+            foreach (Resolution resolution in _qualityService.Resolutions)
+                resolutionOptions.Add($"{resolution.width}x{resolution.height} {resolution.refreshRateRatio} Hz");
             _resolutionDropdown.AddOptions(resolutionOptions);
-            _resolutionDropdown.SetValueWithoutNotify(Array.IndexOf(_allResolutions, Screen.currentResolution));
+            _resolutionDropdown.SetValueWithoutNotify(Array.IndexOf(_qualityService.Resolutions, Screen.currentResolution));
             _resolutionDropdown.RefreshShownValue();
         }
 
@@ -56,21 +55,5 @@ namespace MultiplayerGame.Code.Core.UI.Settings
             _qualityDropdown.SetValueWithoutNotify(QualitySettings.GetQualityLevel());
             _qualityDropdown.RefreshShownValue();
         }
-
-        private void SaveResolution(int resolutionIndex)
-        {
-            _saveLoad.Progress.Settings.Resolution = resolutionIndex;
-            Resolution resolution = _allResolutions[resolutionIndex];
-            Screen.SetResolution(resolution.width, resolution.height, _isFullscreenToggle.isOn);
-        }
-
-        private void SaveQuality(int qualityIndex)
-        {
-            _saveLoad.Progress.Settings.Quality = qualityIndex;
-            QualitySettings.SetQualityLevel(qualityIndex);
-        }
-
-        private void SaveFullscreen(bool isFullscreen) =>
-            Screen.fullScreen = _saveLoad.Progress.Settings.IsFullscreen = isFullscreen;
     }
 }

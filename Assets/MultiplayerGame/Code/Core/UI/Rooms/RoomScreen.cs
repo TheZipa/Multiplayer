@@ -20,7 +20,7 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
         [SerializeField] private Image _mapPreview;
         [SerializeField] private TextMeshProUGUI _mapName;
 
-        private IMultiplayerService _multiplayerService;
+        private IMultiplayerRooms _multiplayerRooms;
         private Dictionary<string, RoomPlayerField> _roomPlayerFields;
         private Stack<RoomPlayerField> _fields;
         private int _minPlayers;
@@ -37,21 +37,21 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
             });
         }
 
-        public void Construct(IMultiplayerService multiplayerService, Stack<RoomPlayerField> roomPlayerFields, 
+        public void Construct(IMultiplayerRooms multiplayerRooms, Stack<RoomPlayerField> roomPlayerFields, 
             int maxPlayers, int minPlayers)
         {
             _roomPlayerFields = new Dictionary<string, RoomPlayerField>(maxPlayers);
             _fields = roomPlayerFields;
-            _multiplayerService = multiplayerService;
-            _multiplayerService.OnPlayerRoomJoin += AddPlayerToRoom;
-            _multiplayerService.OnPlayerRoomLeft += RemovePlayerFromRoom;
+            _multiplayerRooms = multiplayerRooms;
+            _multiplayerRooms.OnPlayerRoomJoin += AddPlayerToRoom;
+            _multiplayerRooms.OnPlayerRoomLeft += RemovePlayerFromRoom;
             _minPlayers = minPlayers;
         }
 
         public void SetupRoom()
         {
-            foreach (Photon.Realtime.Player player in _multiplayerService.GetPlayersInRoom()) AddPlayerToRoom(player);
-            _startGameButton.gameObject.SetActive(_multiplayerService.IsMasterPlayer());
+            foreach (Photon.Realtime.Player player in _multiplayerRooms.GetPlayersInRoom()) AddPlayerToRoom(player);
+            _startGameButton.gameObject.SetActive(_multiplayerRooms.IsMasterPlayer());
         }
 
         public void SetMapData(MapData mapData)
@@ -62,7 +62,7 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
 
         private void TryStartGame()
         {
-            if (_multiplayerService.GetPlayersInRoom().Length < _minPlayers) return;
+            if (_multiplayerRooms.GetPlayersInRoom().Length < _minPlayers) return;
             OnStartGame?.Invoke();
         }
 
@@ -93,8 +93,8 @@ namespace MultiplayerGame.Code.Core.UI.Rooms
 
         private void OnDestroy()
         {
-            _multiplayerService.OnPlayerRoomJoin -= AddPlayerToRoom;
-            _multiplayerService.OnPlayerRoomLeft -= RemovePlayerFromRoom;
+            _multiplayerRooms.OnPlayerRoomJoin -= AddPlayerToRoom;
+            _multiplayerRooms.OnPlayerRoomLeft -= RemovePlayerFromRoom;
         }
     }
 }

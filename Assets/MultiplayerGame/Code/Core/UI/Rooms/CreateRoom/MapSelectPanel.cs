@@ -1,5 +1,4 @@
 ﻿using System;
-using MultiplayerGame.Code.Services.Sound;
 using UnityEngine;
 
 namespace MultiplayerGame.Code.Core.UI.Rooms.CreateRoom
@@ -11,7 +10,7 @@ namespace MultiplayerGame.Code.Core.UI.Rooms.CreateRoom
         [HideInInspector] public int SelectedMapId = -1;
         private MapSelectElement[] _mapSelectElements;
 
-        public void Construct(ISoundService soundService, MapSelectElement[] mapSelectElements)
+        public void Construct(MapSelectElement[] mapSelectElements)
         {
             _mapSelectElements = mapSelectElements;
             foreach (MapSelectElement selectElement in _mapSelectElements) 

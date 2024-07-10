@@ -15,7 +15,8 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
     {
         private readonly IGameStateMachine _stateMachine;
         private readonly ISaveLoad _saveLoad;
-        private readonly IMultiplayerService _multiplayerService;
+        private readonly IMultiplayerRooms _multiplayerRooms;
+        private readonly IMultiplayerCommon _multiplayerCommon;
         private readonly ILoadingCurtain _loadingCurtain;
         private readonly IEntityContainer _entityContainer;
         private readonly IStaticData _staticData;
@@ -23,12 +24,13 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private MainMenuView _mainMenuView;
         private SettingsPanel _settingsPanel;
 
-        public MenuState(IGameStateMachine stateMachine, ISaveLoad saveLoad, IMultiplayerService multiplayerService,
-            ILoadingCurtain loadingCurtain, IEntityContainer entityContainer, IStaticData staticData)
+        public MenuState(IGameStateMachine stateMachine, ISaveLoad saveLoad, IMultiplayerRooms multiplayerRooms,
+            IMultiplayerCommon multiplayerCommon, ILoadingCurtain loadingCurtain, IEntityContainer entityContainer, IStaticData staticData)
         {
-            _stateMachine = stateMachine;
             _saveLoad = saveLoad;
-            _multiplayerService = multiplayerService;
+            _stateMachine = stateMachine;
+            _multiplayerRooms = multiplayerRooms;
+            _multiplayerCommon = multiplayerCommon;
             _loadingCurtain = loadingCurtain;
             _entityContainer = entityContainer;
             _staticData = staticData;
@@ -46,7 +48,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             _mainMenuView.OnPlayClick -= DefinePlayerAndShowRooms;
             _mainMenuView.OnFreeGameClick -= CreateFreeGameRoom;
             _mainMenuView.OnSettingsClick -= _settingsPanel.Show;
-            _multiplayerService.OnRoomJoined -= SwitchToFreeGame;
+            _multiplayerRooms.OnRoomJoined -= SwitchToFreeGame;
         }
 
         private void Subscribe()
@@ -54,14 +56,14 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
             _mainMenuView.OnPlayClick += DefinePlayerAndShowRooms;
             _mainMenuView.OnFreeGameClick += CreateFreeGameRoom;
             _mainMenuView.OnSettingsClick += _settingsPanel.Show;
-            _multiplayerService.OnRoomJoined += SwitchToFreeGame;
+            _multiplayerRooms.OnRoomJoined += SwitchToFreeGame;
         }
 
         private void DefinePlayerAndShowRooms()
         {
             if (!_mainMenuView.TryGetNickname(out string nickname)) return;
             _saveLoad.Progress.Nickname = nickname;
-            _multiplayerService.SetNickname(nickname);
+            _multiplayerCommon.SetNickname(nickname);
             SwitchToRoomList();
         }
 
@@ -78,7 +80,7 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private void CreateFreeGameRoom()
         {
             _loadingCurtain.Show();
-            _multiplayerService.CreateAndJoinRoom(String.Empty, 0, 1, false);
+            _multiplayerRooms.CreateAndJoinRoom(String.Empty, 0, 1, false);
         }
     }
 }

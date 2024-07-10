@@ -15,33 +15,33 @@ namespace MultiplayerGame.Code.Infrastructure.StateMachine.States
         private readonly ISceneLoader _sceneLoader;
         private readonly IUIFactory _uiFactory;
         private readonly ISaveLoad _saveLoad;
-        private readonly IMultiplayerService _multiplayerService;
+        private readonly IMultiplayerConnection _multiplayerConnection;
         private const string MenuScene = "Menu";
 
         public LoadMenuState(IGameStateMachine stateMachine, ISceneLoader sceneLoader,
-            IUIFactory uiFactory, ISaveLoad saveLoad, IMultiplayerService multiplayerService)
+            IUIFactory uiFactory, ISaveLoad saveLoad, IMultiplayerConnection multiplayerConnection)
         {
             _stateMachine = stateMachine;
             _sceneLoader = sceneLoader;
             _uiFactory = uiFactory;
             _saveLoad = saveLoad;
-            _multiplayerService = multiplayerService;
+            _multiplayerConnection = multiplayerConnection;
         }
         
         public void Enter()
         {
-            _multiplayerService.OnConnectingSuccess += SwitchToMenu;
+            _multiplayerConnection.OnConnectingSuccess += SwitchToMenu;
             _sceneLoader.LoadScene(MenuScene, PrepareMenu);
         }
 
-        public void Exit() => _multiplayerService.OnConnectingSuccess -= SwitchToMenu;
+        public void Exit() => _multiplayerConnection.OnConnectingSuccess -= SwitchToMenu;
 
         private void SwitchToMenu() => _stateMachine.Enter<MenuState>();
 
         private async void PrepareMenu()
         {
             await CreateMenuElements();
-            _multiplayerService.Connect();
+            _multiplayerConnection.Connect();
         }
         
         private async UniTask CreateMenuElements()
